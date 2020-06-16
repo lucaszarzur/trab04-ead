@@ -1,1 +1,0 @@
-Pasta para inclusão dos artefatos de banco de dados criados (DER, modelo lógico e modelo físico).
