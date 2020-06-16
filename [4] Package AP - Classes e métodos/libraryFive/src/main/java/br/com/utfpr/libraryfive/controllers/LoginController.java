@@ -6,22 +6,13 @@ import br.com.utfpr.libraryfive.util.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 @Controller
 @Transactional
@@ -35,27 +26,18 @@ public class LoginController extends AbstractController {
     @Autowired
     Session session;
 
-    @InitBinder
-    protected void initBinder(WebDataBinder binder) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        binder.registerCustomEditor(Date.class, new CustomDateEditor(
-                dateFormat, false));
-    }
-
     @RequestMapping(value = {"/", "/login"}, method = RequestMethod.GET)
     public ModelAndView showLogin() {
 
-        ModelAndView modelAndView = new ModelAndView("login/login.html");
+        ModelAndView modelAndView = new ModelAndView("login/login");
         modelAndView.addObject("user", new UserModel());
 
         return modelAndView;
     }
 
+    // TODO - Refactor this with Spring Security
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String doLogin(HttpServletRequest request, HttpServletResponse response,
-                                @ModelAttribute("user") UserModel user, BindingResult result) {
-
-        ModelAndView modelAndView = new ModelAndView();
+    public String doLogin(@ModelAttribute("user") UserModel user,  ModelAndView modelAndView) {
 
         if (userService.doLogin(user.getEmail(), user.getPassword()) != null) {
             LOG.info("User " + user.getEmail() + " exists, redirecting to homepage...");
@@ -76,15 +58,8 @@ public class LoginController extends AbstractController {
         }
     }
 
-    @RequestMapping(value= {"/access_denied"}, method=RequestMethod.GET)
-    public ModelAndView accessDenied() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("errors/access_denied.html");
-        return modelAndView;
-    }
-
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
-    public String logout(HttpServletRequest request, HttpServletResponse response) {
+    public String logout() {
 
         return REDIRECT_TO_LOGIN;
     }

@@ -10,11 +10,17 @@ public interface CollectionCopyService {
 
     void createCollectionCopy(CollectionCopyModel collectionCopy);
 
+    void editCollectionCopy(CollectionCopyModel collectionCopy);
+
+    void deleteCollectionCopy(CollectionCopyModel collectionCopy);
+
     List<CollectionCopyModel> listAllCollectionCopy();
 
     CollectionCopyModel findById(Integer id);
 
-    String findCollectionCopyByCollectionTitle(String collectionTitle);
-
     CollectionCopyModel getCollectionCopyByRegisterForm(HttpServletRequest request, Boolean isNewCollectionCopy);
+
+    void editCollectionCopySituation(CollectionCopyModel collectionCopy, String situation);
+
+    CollectionCopyModel.CollectionCopySituation getCollectionCopySituation(String parameter);
 }

@@ -1,4 +1,4 @@
-package br.com.utfpr.libraryfive.DAO;
+package br.com.utfpr.libraryfive.dao;
 
 import br.com.utfpr.libraryfive.model.AuthorCollectionModel;
 import br.com.utfpr.libraryfive.model.AuthorModel;

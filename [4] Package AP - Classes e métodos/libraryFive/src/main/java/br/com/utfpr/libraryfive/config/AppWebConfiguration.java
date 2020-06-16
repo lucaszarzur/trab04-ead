@@ -12,8 +12,7 @@ import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
 @Configuration
 @EnableWebMvc
-// informa quais serão as classes à serem lidas
-@ComponentScan(basePackages = "br.com.utfpr.libraryfive")
+@ComponentScan(basePackages = "br.com.utfpr.libraryfive") // which class will be read
 public class AppWebConfiguration implements WebMvcConfigurer {
 
     @Autowired

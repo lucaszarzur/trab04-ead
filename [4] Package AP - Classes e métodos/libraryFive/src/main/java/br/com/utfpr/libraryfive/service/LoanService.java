@@ -1,15 +1,12 @@
 package br.com.utfpr.libraryfive.service;
 
 import br.com.utfpr.libraryfive.model.LoanModel;
-import br.com.utfpr.libraryfive.model.UserModel;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface LoanService {
 
-    void makeLoan(String collectionTitle, Integer quantity);
+    void makeLoan(Integer collectionId, Integer quantity);
 
     LoanModel findById(Integer id);
 
@@ -17,7 +14,7 @@ public interface LoanService {
 
     List<LoanModel> listAllByEmail(String userEmail);
 
-    void renewLoan();
+    void renewLoan(LoanModel loanModel);
 
-    Boolean isLoanLate(LocalDateTime expectedReturnDate);
+    Boolean isLoanLate(LoanModel loanModel);
 }

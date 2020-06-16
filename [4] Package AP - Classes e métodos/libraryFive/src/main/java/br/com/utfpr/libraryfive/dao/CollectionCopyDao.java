@@ -1,4 +1,4 @@
-package br.com.utfpr.libraryfive.DAO;
+package br.com.utfpr.libraryfive.dao;
 
 import br.com.utfpr.libraryfive.model.CollectionCopyModel;
 
@@ -8,9 +8,11 @@ public interface CollectionCopyDao {
 
     void createCollectionCopy(CollectionCopyModel collectionCopy);
 
-    List<CollectionCopyModel> listAllCollectionCopy();
+    void editCollectionCopy(CollectionCopyModel collectionCopy);
 
-    void findCollectionCopyByCollectionTitle(String collectionTitle);
+    void deleteCollectionCopy(CollectionCopyModel collectionCopy);
+
+    List<CollectionCopyModel> listAllCollectionCopy();
 
     CollectionCopyModel findById(Integer id);
 }

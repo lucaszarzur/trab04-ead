@@ -1,6 +1,5 @@
 package br.com.utfpr.libraryfive.service;
 
-import br.com.utfpr.libraryfive.model.AuthorCollectionModel;
 import br.com.utfpr.libraryfive.model.AuthorModel;
 import br.com.utfpr.libraryfive.model.CollectionModel;
 

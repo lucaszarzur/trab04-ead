@@ -1,11 +1,14 @@
 package br.com.utfpr.libraryfive.controllers;
 
 import br.com.utfpr.libraryfive.model.*;
+import br.com.utfpr.libraryfive.populators.CollectionModifiedPopulator;
 import br.com.utfpr.libraryfive.service.AuthorService;
 import br.com.utfpr.libraryfive.service.CollectionCopyService;
 import br.com.utfpr.libraryfive.service.CollectionService;
 import br.com.utfpr.libraryfive.util.ModifiedCollection;
 import br.com.utfpr.libraryfive.util.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -23,8 +25,13 @@ import java.util.List;
 @RequestMapping("/collection")
 public class CollectionController extends AbstractController {
 
+    static final Logger LOG = LoggerFactory.getLogger(CollectionController.class);
+
     @Autowired
     private CollectionService collectionService;
+
+    @Autowired
+    CollectionModifiedPopulator collectionModifiedPopulator;
 
     @Autowired
     private CollectionCopyService collectionCopyService;
@@ -36,27 +43,18 @@ public class CollectionController extends AbstractController {
     AuthorService authorService;
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public ModelAndView showCollection(){
+    public ModelAndView showCollection(ModelAndView modelAndView){
 
         List<CollectionModel> availableCollection = collectionService.findAllAvailableCollection();
-        List<ModifiedCollection> collections = new ArrayList<>();
 
-        for (CollectionModel collectionModel : availableCollection) {
-            ModifiedCollection modifiedCollection = new ModifiedCollection();
-            modifiedCollection.setId(collectionModel.getId());
-            modifiedCollection.setTitle(collectionModel.getTitle());
-            modifiedCollection.setAuthor(authorService.findAuthorNameByCollectionTitle(collectionModel.getTitle()).getName());
-            modifiedCollection.setPublicationYear(collectionModel.getPublicationYear());
-            modifiedCollection.setType(collectionModel.getCollectionType().name());
-
-            collections.add(modifiedCollection);
-        }
+        List<ModifiedCollection> collections = collectionModifiedPopulator.populate(availableCollection, false);
 
         if (!availableCollection.isEmpty()) {
-            ModelAndView modelAndView = new ModelAndView();
             modelAndView.setViewName("collection/collectionList");
             modelAndView.addObject("collections", collections);
-            modelAndView.addObject("userName", session.getCurrentUser().getName());
+            modelAndView.addObject("user", session.getCurrentUser());
+
+            LOG.info("Collections successfully retrieved!");
 
             return modelAndView;
         }
@@ -74,9 +72,13 @@ public class CollectionController extends AbstractController {
 
             if (collection != null) {
                 collectionService.createCollection(collection);
+                LOG.info("Collection has been created!");
 
                 // create in DB and connect collection with author (AuthorCollection)
                 authorService.createAuthorCollection(collection);
+                LOG.info("Collection " + collection.getTitle() + " was related with Author " +
+                        collection.getAuthorCollectionList().iterator().next().getAuthor().getName() +
+                        " and successfully created!");
 
                 return REDIRECT_TO_ADMIN_VIEW_COLLECTIONS;
             }
@@ -95,6 +97,8 @@ public class CollectionController extends AbstractController {
 
             collectionService.editCollection(collection);
 
+            LOG.info("Collection has been edited!");
+
             return REDIRECT_TO_ADMIN_VIEW_COLLECTIONS;
         }
         // retorna erro
@@ -109,6 +113,8 @@ public class CollectionController extends AbstractController {
         if (isAdmin) {
             CollectionModel collection =  collectionService.findById(id);
             collectionService.deleteCollection(collection);
+
+            LOG.info("Collection has been deleted in database!");
 
             return REDIRECT_TO_ADMIN_VIEW_COLLECTIONS;
         }
@@ -127,8 +133,45 @@ public class CollectionController extends AbstractController {
             if (collectionCopy != null) {
                 collectionCopyService.createCollectionCopy(collectionCopy);
 
+                LOG.info("Collection copy has been created!");
+
                 return REDIRECT_TO_ADMIN_VIEW_COLLECTIONS;
             }
+        }
+        // retorna erro
+        return null;
+    }
+
+    @RequestMapping(value = "/copy/edit", method = RequestMethod.POST)
+    public String editCollectionCopy(final HttpServletRequest request) {
+
+        Boolean isAdmin = session.getCurrentUser().getAdmin();
+
+        if (isAdmin) {
+            CollectionCopyModel collectionCopy = collectionCopyService.getCollectionCopyByRegisterForm(request, false);
+
+            collectionCopyService.editCollectionCopy(collectionCopy);
+
+            LOG.info("Collection copy has been edited!");
+
+            return REDIRECT_TO_ADMIN_VIEW_COLLECTIONS;
+        }
+        // retorna erro
+        return null;
+    }
+
+    @RequestMapping(value = "/copy/delete", method = RequestMethod.GET)
+    public String deleteCollectionCopy(@RequestParam("id") final int id){
+
+        Boolean isAdmin = session.getCurrentUser().getAdmin();
+
+        if (isAdmin) {
+            CollectionCopyModel collectionCopy = collectionCopyService.findById(id);
+            collectionCopyService.deleteCollectionCopy(collectionCopy);
+
+            LOG.info("Collection copy has been deleted in database!");
+
+            return REDIRECT_TO_ADMIN_VIEW_COLLECTIONS;
         }
         // retorna erro
         return null;

@@ -96,7 +96,7 @@
     <!-- Collection of nav links, forms, and other content for toggling -->
     <div id="navbarCollapse" class="collapse navbar-collapse justify-content-start">
         <ul class="nav navbar-nav">
-            <li class="nav-item active"><a th:href="@{/collection/list}" class="nav-link">Catálogo</a></li>
+            <li class="nav-item active"><a th:href="@{/collection/list}" class="nav-link">Catálogo (aluno)</a></li>
             <li class="nav-item dropdown">
                 <a data-toggle="dropdown" class="nav-link dropdown-toggle" href="#">Administração<b
                         class="caret"></b></a>
@@ -114,7 +114,7 @@
                 <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle user-action"><span
                         th:utext="${userName}"></span><b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                    <li><a th:href="@{/user/myaccount}" class="dropdown-item"><i class="fa fa-user-o"></i> Minha
+                    <li><a th:href="@{/myAccount}" class="dropdown-item"><i class="fa fa-user-o"></i> Minha
                         conta</a></li>
                     <li class="divider dropdown-divider"></li>
                     <li><a th:href="@{/logout}" class="dropdown-item"><i class="material-icons">&#xE8AC;</i> Logout</a>

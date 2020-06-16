@@ -1,6 +1,5 @@
-package br.com.utfpr.libraryfive.DAO;
+package br.com.utfpr.libraryfive.dao;
 
-import br.com.utfpr.libraryfive.model.AuthorModel;
 import br.com.utfpr.libraryfive.model.CollectionModel;
 
 import java.util.List;
@@ -29,5 +28,5 @@ public interface CollectionDao {
 
     List<CollectionModel> showCollectionInfo();
 
-    boolean isAvailable(CollectionModel collection, Integer quantity);
+    boolean isAvailable(Integer collectionId, Integer quantity);
 }

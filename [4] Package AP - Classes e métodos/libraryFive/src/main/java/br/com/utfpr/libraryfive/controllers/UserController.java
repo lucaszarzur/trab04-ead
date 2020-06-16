@@ -8,12 +8,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Controller
@@ -79,16 +77,14 @@ public class UserController extends AbstractController {
     }
 
     @RequestMapping(value = "/listAllUsers", method = RequestMethod.GET)
-    public ModelAndView listAllUsers(@ModelAttribute("actualUserEmail") final String actualUserEmail,
-                                     HttpServletRequest request, HttpServletResponse response,
-                                     BindingResult result) {
+    public ModelAndView listAllUsers(@ModelAttribute("actualUserEmail") final String actualUserEmail, ModelAndView modelAndView) {
 
         UserModel actualUser = userService.findByEmail(actualUserEmail);
         if (actualUser.getAdmin()) {
 
             List<UserModel> users = userService.listAllUsers();
 
-            ModelAndView modelAndView = new ModelAndView("homeAdmin");
+            modelAndView.setViewName("home/home");
             modelAndView.addObject("users", users);
             modelAndView.addObject("user", actualUser);
             LOG.info("Users success retrieved!");
@@ -96,19 +92,5 @@ public class UserController extends AbstractController {
             return modelAndView;
         }
             return null;
-    }
-
-    @RequestMapping(value = "/findOne", method = RequestMethod.GET)
-    public UserModel findById(final Integer id) {
-        return userService.findById(id);
-    }
-
-    private ModelAndView newPage(String page, String object) {
-        ModelAndView modelAndView = null;
-
-        modelAndView = new ModelAndView(page);
-        modelAndView.addObject(object, new UserModel());
-
-        return modelAndView;
     }
 }

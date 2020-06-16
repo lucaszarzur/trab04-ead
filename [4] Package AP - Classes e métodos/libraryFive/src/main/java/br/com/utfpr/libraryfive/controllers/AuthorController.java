@@ -1,7 +1,7 @@
 package br.com.utfpr.libraryfive.controllers;
 
 import br.com.utfpr.libraryfive.model.AuthorModel;
-import br.com.utfpr.libraryfive.model.UserModel;
+import br.com.utfpr.libraryfive.populators.AuthorPopulator;
 import br.com.utfpr.libraryfive.service.AuthorService;
 import br.com.utfpr.libraryfive.util.Session;
 import org.slf4j.Logger;
@@ -26,6 +26,9 @@ public class AuthorController extends AbstractController {
     private Session session;
 
     @Autowired
+    private AuthorPopulator authorPopulator;
+
+    @Autowired
     private AuthorService authorService;
 
     @RequestMapping(value = "/new", method = RequestMethod.POST)
@@ -34,10 +37,12 @@ public class AuthorController extends AbstractController {
         Boolean isAdmin = session.getCurrentUser().getAdmin();
 
         if (isAdmin) {
-            AuthorModel author = populateAuthor(request);
+            AuthorModel author = authorPopulator.populate(request);
 
             if (author != null) {
                 authorService.createAuthor(author);
+
+                LOG.info("Author has been created!");
 
                 return REDIRECT_TO_ADMIN_VIEW_AUTHORS;
             }
@@ -57,6 +62,8 @@ public class AuthorController extends AbstractController {
 
             authorService.editAuthor(author);
 
+            LOG.info("Author has been edited!");
+
             return REDIRECT_TO_ADMIN_VIEW_AUTHORS;
         }
         // retorna erro
@@ -72,16 +79,11 @@ public class AuthorController extends AbstractController {
             AuthorModel author = authorService.findById(id);
             authorService.deleteAuthor(author);
 
+            LOG.info("Author has been deleted in database!");
+
             return REDIRECT_TO_ADMIN_VIEW_AUTHORS;
         }
         // retorna erro
         return null;
-    }
-
-    private AuthorModel populateAuthor(HttpServletRequest request) {
-        AuthorModel author = new AuthorModel();
-        author.setName(request.getParameter("name"));
-
-        return author;
     }
 }

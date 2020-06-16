@@ -48,8 +48,8 @@
         });
 
         $(document).ready(function () {
-            $('body').on('click', '.collection_id',function(){
-                document.getElementById("collection_id").value = $(this).attr('data');
+            $('body').on('click', '.collectionId',function(){
+                document.getElementById("collectionId").value = $(this).attr('data');
                 console.log($(this).attr('data-id'));
             });
         });
@@ -57,8 +57,8 @@
 </head>
 <body>
 
-<!-- nav user -->
-<nav class="navbar navbar-default navbar-expand-lg navbar-light">
+<!-- nav admin -->
+<nav th:if="${user.getAdmin() == true}" class="navbar navbar-default navbar-expand-lg navbar-light">
     <div class="navbar-header d-flex col">
         <a class="navbar-brand" th:href="@{/home}">Library<b>Five</b></a>
         <button type="button" data-target="#navbarCollapse" data-toggle="collapse"
@@ -71,6 +71,50 @@
     </div>
     <!-- Collection of nav links, forms, and other content for toggling -->
     <div id="navbarCollapse" class="collapse navbar-collapse justify-content-start">
+        <ul class="nav navbar-nav">
+            <li class="nav-item active"><a th:href="@{/collection/list}" class="nav-link">Catálogo (aluno)</a></li>
+            <li class="nav-item dropdown">
+                <a data-toggle="dropdown" class="nav-link dropdown-toggle" href="#">Administração<b
+                        class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a th:href="@{/admin/manage/authors}" class="dropdown-item">Administrar autores</a></li>
+                    <li><a th:href="@{/admin/manage/collections}" class="dropdown-item">Administrar catálogo</a></li>
+                    <li><a th:href="@{/admin/manage/loans}" class="dropdown-item">Administrar empréstimos</a></li>
+                    <li><a th:href="@{/admin/manage/users}">Administrar usuários</a></li>
+                </ul>
+            </li>
+
+        </ul>
+        <ul class="nav navbar-nav navbar-right ml-auto">
+            <li class="nav-item dropdown">
+                <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle user-action"><span
+                        th:utext="${user.name}"></span><b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a th:href="@{/myAccount}" class="dropdown-item"><i class="fa fa-user-o"></i> Minha
+                        conta</a></li>
+                    <li class="divider dropdown-divider"></li>
+                    <li><a th:href="@{/logout}" class="dropdown-item"><i class="material-icons">&#xE8AC;</i> Logout</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<!-- nav user -->
+<nav th:if="${user.getAdmin() == false}" class="navbar navbar-default navbar-expand-lg navbar-light">
+    <div class="navbar-header d-flex col">
+        <a class="navbar-brand" th:href="@{/home}">Library<b>Five</b></a>
+        <button type="button" data-target="#navbarCollapse2" data-toggle="collapse"
+                class="navbar-toggle navbar-toggler ml-auto">
+            <span class="navbar-toggler-icon"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+    </div>
+    <!-- Collection of nav links, forms, and other content for toggling -->
+    <div id="navbarCollapse2" class="collapse navbar-collapse justify-content-start">
         <ul class="nav navbar-nav">
             <li class="nav-item active"><a th:href="@{/collection/list}" class="nav-link">Catálogo</a></li>
             <li class="nav-item dropdown">
@@ -86,9 +130,9 @@
         </ul>
         <ul class="nav navbar-nav navbar-right ml-auto">
             <li class="nav-item dropdown">
-                <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle user-action"><span th:utext="${userName}"></span><b class="caret"></b></a>
+                <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle user-action"><span th:utext="${user.name}"></span><b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                    <li><a th:href="@{/user/myaccount}" class="dropdown-item"><i class="fa fa-user-o"></i> Minha conta</a></li>
+                    <li><a th:href="@{/myAccount}" class="dropdown-item"><i class="fa fa-user-o"></i> Minha conta</a></li>
                     <li class="divider dropdown-divider"></li>
                     <li><a th:href="@{/logout}" class="dropdown-item"><i class="material-icons">&#xE8AC;</i> Logout</a></li>
                 </ul>
@@ -133,7 +177,7 @@
                 <td><span th:text="${collection.publicationYear}"></span></td>
                 <td><span th:text="${collection.type}"></span></td>
                 <td>
-                    <a href="#addNewLoan" class="btn btn-success collection_id" data-toggle="modal" th:data="${collection.title}"><i class="material-icons custom-color-add-button" data-toggle="tooltip" title="Novo empréstimo">&#xE147; </i>Empréstimo</a>
+                    <a href="#addNewLoan" class="btn btn-success collectionId" data-toggle="modal" th:data="${collection.id}"><i class="material-icons custom-color-add-button" data-toggle="tooltip" title="Novo empréstimo">&#xE147; </i>Empréstimo</a>
                 </td>
             </tr>
             </tbody>
@@ -168,7 +212,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <input id="collection_id" name="collection_id" type="hidden" value="" />
+                    <input id="collectionId" name="collectionId" type="hidden" value="" />
                     <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancelar">
                     <input type="submit" class="btn btn-info" value="Salvar">
                 </div>

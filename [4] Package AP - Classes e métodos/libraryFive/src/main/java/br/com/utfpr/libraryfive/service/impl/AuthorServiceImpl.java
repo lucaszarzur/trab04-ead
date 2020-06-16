@@ -1,9 +1,10 @@
 package br.com.utfpr.libraryfive.service.impl;
 
-import br.com.utfpr.libraryfive.DAO.AuthorDao;
+import br.com.utfpr.libraryfive.dao.AuthorDao;
 import br.com.utfpr.libraryfive.model.AuthorCollectionModel;
 import br.com.utfpr.libraryfive.model.AuthorModel;
 import br.com.utfpr.libraryfive.model.CollectionModel;
+import br.com.utfpr.libraryfive.populators.AuthorCollectionPopulator;
 import br.com.utfpr.libraryfive.service.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,9 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Autowired
     private AuthorDao authorDao;
+
+    @Autowired
+    private AuthorCollectionPopulator authorCollectionPopulator;
 
     @Override
     public List<AuthorModel> listAllAuthors() {
@@ -55,10 +59,8 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public void createAuthorCollection(CollectionModel collection) {
-        AuthorCollectionModel authorCollectionModel = new AuthorCollectionModel();
-        authorCollectionModel.setAuthor(collection.getAuthorCollectionList().iterator().next().getAuthor());
-        authorCollectionModel.setCollection(collection);
+        AuthorCollectionModel authorCollection = authorCollectionPopulator.populate(collection);
 
-         authorDao.createAuthorCollection(authorCollectionModel);
+        authorDao.createAuthorCollection(authorCollection);
     }
 }

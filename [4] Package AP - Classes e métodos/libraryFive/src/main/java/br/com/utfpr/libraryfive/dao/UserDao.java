@@ -1,4 +1,4 @@
-package br.com.utfpr.libraryfive.DAO;
+package br.com.utfpr.libraryfive.dao;
 
 import br.com.utfpr.libraryfive.model.UserModel;
 
@@ -12,17 +12,9 @@ public interface UserDao {
 
     void deleteUser(UserModel user);
 
-    void setActive(UserModel user, Boolean active);
-
     List<UserModel> findAllUsers();
 
     UserModel findById(Integer id);
-
-    UserModel findByName(String name);
-
-    UserModel findByType(String type);
-
-    UserModel findByStatus(String status);
 
     UserModel findByEmail(String email);
 

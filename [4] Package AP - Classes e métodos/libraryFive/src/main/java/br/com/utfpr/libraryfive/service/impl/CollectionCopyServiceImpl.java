@@ -1,12 +1,10 @@
 package br.com.utfpr.libraryfive.service.impl;
 
-import br.com.utfpr.libraryfive.DAO.CollectionCopyDao;
+import br.com.utfpr.libraryfive.dao.CollectionCopyDao;
 import br.com.utfpr.libraryfive.model.CollectionCopyModel;
-import br.com.utfpr.libraryfive.model.CollectionModel;
+import br.com.utfpr.libraryfive.populators.CollectionCopyPopulator;
 import br.com.utfpr.libraryfive.service.CollectionCopyService;
-import br.com.utfpr.libraryfive.service.CollectionService;
 import br.com.utfpr.libraryfive.util.DateUtils;
-import br.com.utfpr.libraryfive.util.FormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,20 +17,27 @@ import java.util.List;
 public class CollectionCopyServiceImpl implements CollectionCopyService {
 
     @Autowired
-    private CollectionCopyDao collectionCopyDao;
-
-    @Autowired
-    private CollectionService collectionService;
-
-    @Autowired
     DateUtils dateUtils;
 
     @Autowired
-    private FormatUtils formatUtils;
+    private CollectionCopyDao collectionCopyDao;
+
+    @Autowired
+    CollectionCopyPopulator collectionCopyPopulator;
 
     @Override
     public void createCollectionCopy(CollectionCopyModel collectionCopy) {
         collectionCopyDao.createCollectionCopy(collectionCopy);
+    }
+
+    @Override
+    public void editCollectionCopy(CollectionCopyModel collectionCopy) {
+        collectionCopyDao.editCollectionCopy(collectionCopy);
+    }
+
+    @Override
+    public void deleteCollectionCopy(CollectionCopyModel collectionCopy) {
+        collectionCopyDao.deleteCollectionCopy(collectionCopy);
     }
 
     @Override
@@ -41,36 +46,23 @@ public class CollectionCopyServiceImpl implements CollectionCopyService {
     }
 
     @Override
-    public String findCollectionCopyByCollectionTitle(String collectionTitle) {
-        collectionCopyDao.findCollectionCopyByCollectionTitle(collectionTitle);
-        return collectionTitle;
-    }
-
-    @Override
     public CollectionCopyModel findById(Integer id) {
-        return null;
+        return collectionCopyDao.findById(id);
     }
 
     @Override
     public CollectionCopyModel getCollectionCopyByRegisterForm(HttpServletRequest request, Boolean isNewCollectionCopy) {
-
-        CollectionCopyModel collectionCopyModel = new CollectionCopyModel();
-        CollectionModel collection = collectionService.findById(formatUtils.getIntegerValue(request.getParameter("collectionId")));
-
-        if (isNewCollectionCopy) {
-            collectionCopyModel.setCollection(collection);
-            collectionCopyModel.setAcquisitionDate(dateUtils.convertDate(request.getParameter("acquisitionDate")));
-            collectionCopyModel.setCollectionCopySituation(getCollectionCopySituation(request.getParameter("collectionCopySituation")));
-        } else {
-            collectionCopyModel = findById(formatUtils.getIntegerValue(request.getParameter("collectionCopyToEditId")));
-
-            collectionCopyModel.setAcquisitionDate(dateUtils.convertDate(request.getParameter("acquisitionDate")));
-            collectionCopyModel.setCollectionCopySituation(getCollectionCopySituation(request.getParameter("collectionCopySituation")));
-        }
-        return collectionCopyModel;
+        return collectionCopyPopulator.populate(request, isNewCollectionCopy);
     }
 
-    private CollectionCopyModel.CollectionCopySituation getCollectionCopySituation(String parameter) {
+    @Override
+    public void editCollectionCopySituation(CollectionCopyModel collectionCopy, String situation) {
+        collectionCopy.setCollectionCopySituation(getCollectionCopySituation(situation));
+        editCollectionCopy(collectionCopy);
+    }
+
+    @Override
+    public CollectionCopyModel.CollectionCopySituation getCollectionCopySituation(String parameter) {
 
         if (parameter.equals(CollectionCopyModel.CollectionCopySituation.Disponível.toString())) {
             return CollectionCopyModel.CollectionCopySituation.Disponível;

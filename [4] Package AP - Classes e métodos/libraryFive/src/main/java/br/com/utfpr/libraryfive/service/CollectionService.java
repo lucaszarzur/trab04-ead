@@ -11,11 +11,7 @@ public interface CollectionService {
 
     void editCollection(CollectionModel collection);
 
-    void updateStatus(CollectionModel collection, String bookStatus);
-
     void deleteCollection(CollectionModel collection);
-
-    void setActive(CollectionModel collection, Boolean active);
 
     List<CollectionModel> listAllCollections();
 
@@ -25,11 +21,7 @@ public interface CollectionService {
 
     CollectionModel findByTitle(String title);
 
-    CollectionModel findByType(String type);
-
-    List<CollectionModel> showCollectionInfo();
-
-    boolean isAvailable(CollectionModel collection, Integer quantity);
+    boolean isAvailable(Integer collectionId, Integer quantity);
 
     CollectionModel getCollectionByRegisterForm(HttpServletRequest request, Boolean isNewCollection);
 }

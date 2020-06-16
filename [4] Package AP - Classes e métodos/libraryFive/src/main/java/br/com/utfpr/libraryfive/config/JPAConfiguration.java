@@ -16,16 +16,16 @@ import java.util.Properties;
 @EnableTransactionManagement
 public class JPAConfiguration {
 
-    // cria alguns objetos que são importantes para o nosso entendimento do que realmente está acontecendo
+    // create some objects that are important for our knowledge of what is really happening
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
 
-        // abstração do arquivo persistence.xml
+        // persistence.xml abstraction
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource());
         em.setPackagesToScan(new String[]{"br.com.utfpr.libraryfive.model"});
 
-        // representa a escolha de implementação da JPA que, neste projeto, será o Hibernate
+        // represents the choice of JPA implementation which, in this project, will be the Hibernate
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);
         em.setJpaProperties(additionalProperties());
@@ -38,7 +38,7 @@ public class JPAConfiguration {
         return em;
     }
 
-    // configura os parâmetros de conexão com o banco de dados
+    // configure the parameters of database connection
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -60,7 +60,7 @@ public class JPAConfiguration {
         return properties;
     }
 
-    // informa por qual implementação de controle transacional vamos optar
+    // Informs which transactional control implementation we will choose
     @Bean
     public PlatformTransactionManager transactionManager(EntityManagerFactory emf) {
         JpaTransactionManager transactionManager = new JpaTransactionManager();

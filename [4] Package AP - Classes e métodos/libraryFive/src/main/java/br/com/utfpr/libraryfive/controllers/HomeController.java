@@ -14,7 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/home")
 public class HomeController extends AbstractController {
 
-    static final Logger log = Logger.getLogger(HomeController.class);
+    static final Logger LOG = Logger.getLogger(HomeController.class);
 
     @Autowired
     Session session;
@@ -22,13 +22,10 @@ public class HomeController extends AbstractController {
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView index(ModelAndView modelAndView) {
 
-        if (session.getCurrentUser().getAdmin()) {
-            modelAndView.setViewName("home/homeAdmin");
-        } else {
-            modelAndView.setViewName("home/homeUser");
-        }
+        modelAndView.setViewName("home/home");
+        modelAndView.addObject("user", session.getCurrentUser());
 
-        modelAndView.addObject("userName", session.getCurrentUser().getName());
+        LOG.info("The user " + session.getCurrentUser().getName() + " has logged in and is being redirected to homepage!");
 
         return modelAndView;
     }

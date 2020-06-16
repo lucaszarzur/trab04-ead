@@ -13,17 +13,9 @@ public interface UserService {
 
     void deleteUser(UserModel user);
 
-    void setActive(UserModel user, Boolean active);
-
     List<UserModel> listAllUsers();
 
     UserModel findById(Integer id);
-
-    UserModel findByName(String name);
-
-    UserModel findByType(String type);
-
-    UserModel findByStatus(String status);
 
     UserModel findByEmail(String email);
 

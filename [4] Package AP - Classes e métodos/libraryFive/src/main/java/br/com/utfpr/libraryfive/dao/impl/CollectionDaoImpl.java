@@ -1,7 +1,6 @@
-package br.com.utfpr.libraryfive.DAO.impl;
+package br.com.utfpr.libraryfive.dao.impl;
 
-import br.com.utfpr.libraryfive.DAO.CollectionDao;
-import br.com.utfpr.libraryfive.model.AuthorModel;
+import br.com.utfpr.libraryfive.dao.CollectionDao;
 import br.com.utfpr.libraryfive.model.CollectionCopyModel;
 import br.com.utfpr.libraryfive.model.CollectionModel;
 import org.slf4j.Logger;
@@ -12,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import java.util.Arrays;
 import java.util.List;
 
 @Repository("collectionDao")
@@ -43,7 +43,7 @@ public class CollectionDaoImpl implements CollectionDao {
         LOG.info("deleteCollection started!");
         try {
             entityManager.remove(collection);
-            LOG.info("Collection success deleted!");
+            LOG.info("Collection successfully deleted in database!");
         } catch (NoResultException e) {
             LOG.info("Collection delete fail, because " + e.getMessage());
         }
@@ -62,9 +62,9 @@ public class CollectionDaoImpl implements CollectionDao {
         try {
             collections = entityManager. createQuery("select c from CollectionModel c", CollectionModel.class).
                     getResultList();
-            LOG.info("Collections found!");
+            LOG.info("Collections found in database!");
         } catch (NoResultException e) {
-            collections = null;
+            collections = Arrays.asList();
         }
         return collections;
     }
@@ -80,9 +80,9 @@ public class CollectionDaoImpl implements CollectionDao {
                                                              " WHERE cp.collectionCopySituation = :collectionCopySituation").
                                                              setParameter("collectionCopySituation", CollectionCopyModel.CollectionCopySituation.Disponível).
                                                              getResultList();
-            LOG.info("Collections found!");
+            LOG.info("Collections found in database!");
         } catch (NoResultException e) {
-            collections = null;
+            collections = Arrays.asList();
         }
         return collections;
     }
@@ -98,11 +98,11 @@ public class CollectionDaoImpl implements CollectionDao {
         if (collections.isEmpty()) {
             LOG.info("The author " + id + " doesn't exist!");
 
-            return null;
+            return new CollectionModel();
         }
 
-        LOG.info("Success! Collection with ID " + collections.get(0).getId() + " found!");
-        return collections.get(0);
+        LOG.info("Success! Collection with ID " + collections.stream().findFirst().get().getId() + " found in database!");
+        return collections.stream().findFirst().orElse(null);
     }
 
     @Override
@@ -116,25 +116,45 @@ public class CollectionDaoImpl implements CollectionDao {
         if (collections.isEmpty()) {
             LOG.info("The collection " + title + " doesn't exist!");
 
-            return null;
+            return new CollectionModel();
         }
 
-        LOG.info("Success! Collection with title " + collections.get(0).getTitle() + " found!");
-        return collections.get(0);
+        LOG.info("Success! Collection with title " + collections.stream().findFirst().get().getTitle() + " found in database!");
+        return collections.stream().findFirst().orElse(null);
     }
 
     @Override
     public CollectionModel findByType(String type) {
-        return null;
+        return new CollectionModel();
     }
 
     @Override
     public List<CollectionModel> showCollectionInfo() {
-        return null;
+        return Arrays.asList(new CollectionModel());
     }
 
     @Override
-    public boolean isAvailable(CollectionModel collection, Integer quantity) {
-        return false;
+    public boolean isAvailable(Integer collectionId, Integer quantity) {
+        LOG.info("collection isAvailable started!");
+        List<CollectionModel> collections;
+        Boolean result = false;
+
+        try {
+            collections = entityManager. createQuery("select c from CollectionModel c" +
+                                                             " INNER JOIN c.collectionCopyList cp" +
+                                                             " WHERE cp.collectionCopySituation = :collectionCopySituation " +
+                                                             " AND c.id = :collectionId").
+                                                             setParameter("collectionCopySituation", CollectionCopyModel.CollectionCopySituation.Disponível).
+                                                             setParameter("collectionId", collectionId).
+                                                             getResultList();
+            LOG.info("Collections found in database!");
+
+            if (collections.size() >= quantity)
+                result = true;
+
+        } catch (NoResultException e) {
+            LOG.info("Collection haven't been retrieved, because " + e.getMessage());
+        }
+        return result;
     }
 }

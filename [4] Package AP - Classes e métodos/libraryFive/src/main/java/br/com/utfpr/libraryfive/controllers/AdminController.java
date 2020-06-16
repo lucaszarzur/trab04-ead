@@ -1,6 +1,7 @@
 package br.com.utfpr.libraryfive.controllers;
 
 import br.com.utfpr.libraryfive.model.*;
+import br.com.utfpr.libraryfive.populators.CollectionModifiedPopulator;
 import br.com.utfpr.libraryfive.service.*;
 import br.com.utfpr.libraryfive.util.ModifiedCollection;
 import br.com.utfpr.libraryfive.util.Session;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -28,7 +28,13 @@ public class AdminController {
     private Session session;
 
     @Autowired
+    AuthorService authorService;
+
+    @Autowired
     CollectionService collectionService;
+
+    @Autowired
+    CollectionModifiedPopulator collectionModifiedPopulator;
 
     @Autowired
     CollectionCopyService collectionCopyService;
@@ -39,8 +45,6 @@ public class AdminController {
     @Autowired
     UserService userService;
 
-    @Autowired
-    AuthorService authorService;
 
     @RequestMapping(value = {"/manage/authors"}, method = RequestMethod.GET)
     public ModelAndView manageAuthors(ModelAndView modelAndView, HttpServletRequest request) {
@@ -53,7 +57,7 @@ public class AdminController {
             modelAndView.addObject("userName", session.getCurrentUser().getName());
             modelAndView.addObject("baseUrl", session.getBaseUrl(request));
 
-            LOG.info("Authors success retrieved!");
+            LOG.info("Authors successfully retrieved!");
 
             return modelAndView;
         }
@@ -65,21 +69,10 @@ public class AdminController {
     public ModelAndView manageCollections(ModelAndView modelAndView, HttpServletRequest request) {
 
         List<CollectionModel> allCollections = collectionService.listAllCollections();
-        List<ModifiedCollection> collections = new ArrayList<>();
 
-        for (CollectionModel collectionModel : allCollections) {
-            ModifiedCollection modifiedCollection = new ModifiedCollection();
-            modifiedCollection.setId(collectionModel.getId());
-            modifiedCollection.setTitle(collectionModel.getTitle());
-            modifiedCollection.setAuthor(getAuthor(collectionModel));
-            modifiedCollection.setPublicationYear(collectionModel.getPublicationYear());
-            modifiedCollection.setType(collectionModel.getCollectionType().name());
-            modifiedCollection.setHasCollectionCopy(collectionModel.getCollectionCopyList().isEmpty() ? false : true);
+        List<ModifiedCollection> collections = collectionModifiedPopulator.populate(allCollections, true);
 
-            collections.add(modifiedCollection);
-        }
-
-        // Add a list of collection copy to display in second table
+        // Add a list of collection copy to display in second table in the same page
         modelAndView.addObject("collectionCopyList", collectionCopyService.listAllCollectionCopy());
 
         if (!collections.isEmpty()) {
@@ -89,7 +82,7 @@ public class AdminController {
             modelAndView.addObject("userName", session.getCurrentUser().getName());
             modelAndView.addObject("baseUrl", session.getBaseUrl(request));
 
-            LOG.info("Collections success retrieved!");
+            LOG.info("Collections successfully retrieved!");
 
             return modelAndView;
         }
@@ -102,18 +95,13 @@ public class AdminController {
 
         List<LoanModel> allLoans = loanService.listAll();
 
-        if (!allLoans.isEmpty()) {
+        modelAndView.setViewName("loan/adminLoan");
+        modelAndView.addObject("loans", allLoans);
+        modelAndView.addObject("userName", session.getCurrentUser().getName());
 
-            modelAndView.setViewName("loan/adminLoan");
-            modelAndView.addObject("loans", allLoans);
-            modelAndView.addObject("userName", session.getCurrentUser().getName());
+        LOG.info("Loans successfully retrieved!");
 
-            LOG.info("Loans success retrieved!");
-
-            return modelAndView;
-        }
-        // retorna erro
-        return null;
+        return modelAndView;
     }
 
     @RequestMapping(value = {"/manage/users"}, method = RequestMethod.GET)
@@ -127,15 +115,11 @@ public class AdminController {
             modelAndView.addObject("userName", session.getCurrentUser().getName());
             modelAndView.addObject("baseUrl", session.getBaseUrl(request));
 
-            LOG.info("Users success retrieved!");
+            LOG.info("Users successfully retrieved!");
 
             return modelAndView;
         }
         // retorna erro
         return null;
-    }
-
-    private String getAuthor(CollectionModel collectionModel) {
-        return authorService.findAuthorNameByCollectionTitle(collectionModel.getTitle()) != null ? authorService.findAuthorNameByCollectionTitle(collectionModel.getTitle()).getName() : "" ;
     }
 }
