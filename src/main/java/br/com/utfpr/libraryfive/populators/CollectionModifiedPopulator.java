@@ -24,6 +24,8 @@ public class CollectionModifiedPopulator {
 
         if (adminView) {
             for (CollectionModel collectionModel : collections) {
+                modifiedCollection = new ModifiedCollection();
+
                 modifiedCollection.setId(collectionModel.getId());
                 modifiedCollection.setTitle(collectionModel.getTitle());
                 modifiedCollection.setAuthor(getAuthor(collectionModel));
@@ -33,8 +35,8 @@ public class CollectionModifiedPopulator {
 
                 collectionsAdmin.add(modifiedCollection);
 
-                return collectionsAdmin;
             }
+            return collectionsAdmin;
         } else {
             for (CollectionModel collectionModel : collections) {
                 modifiedCollection.setId(collectionModel.getId());
@@ -45,10 +47,9 @@ public class CollectionModifiedPopulator {
 
                 collectionsUser.add(modifiedCollection);
 
-                return collectionsUser;
             }
+            return collectionsUser;
         }
-        return Arrays.asList(modifiedCollection);
     }
 
     private String getAuthor(CollectionModel collectionModel) {
