@@ -39,6 +39,8 @@ public class CollectionModifiedPopulator {
             return collectionsAdmin;
         } else {
             for (CollectionModel collectionModel : collections) {
+                modifiedCollection = new ModifiedCollection();
+                
                 modifiedCollection.setId(collectionModel.getId());
                 modifiedCollection.setTitle(collectionModel.getTitle());
                 modifiedCollection.setAuthor(authorService.findAuthorNameByCollectionTitle(collectionModel.getTitle()).getName());
