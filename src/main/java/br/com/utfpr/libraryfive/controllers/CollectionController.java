@@ -43,23 +43,19 @@ public class CollectionController extends AbstractController {
     AuthorService authorService;
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public ModelAndView showCollection(ModelAndView modelAndView){
+    public ModelAndView showCollection(ModelAndView modelAndView) {
 
         List<CollectionModel> availableCollection = collectionService.findAllAvailableCollection();
 
         List<ModifiedCollection> collections = collectionModifiedPopulator.populate(availableCollection, false);
 
-        if (!availableCollection.isEmpty()) {
-            modelAndView.setViewName("collection/collectionList");
-            modelAndView.addObject("collections", collections);
-            modelAndView.addObject("user", session.getCurrentUser());
+        modelAndView.setViewName("collection/collectionList");
+        modelAndView.addObject("collections", collections);
+        modelAndView.addObject("user", session.getCurrentUser());
 
-            LOG.info("Collections successfully retrieved!");
+        LOG.info("Collections successfully retrieved!");
 
-            return modelAndView;
-        }
-        // retorna erro
-        return null;
+        return modelAndView;
     }
 
     @RequestMapping(value = "/new", method = RequestMethod.POST)

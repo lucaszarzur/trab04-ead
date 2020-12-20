@@ -89,7 +89,7 @@ public class UserModel implements Serializable {
     }
 
     @NotNull
-    @Size(max = 50)
+    @Size(max = 100)
     @Column(name = "SENHA")
     private String password;
 

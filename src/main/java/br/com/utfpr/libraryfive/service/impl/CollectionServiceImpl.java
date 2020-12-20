@@ -25,7 +25,7 @@ public class CollectionServiceImpl implements CollectionService {
     public void createCollection(CollectionModel collection) {
 
         CollectionModel existingCollection = findByTitle(collection.getTitle());
-        if (existingCollection == null) {
+        if (existingCollection.getId() == null) {
             collectionDao.createCollection(collection);
         } else {
             // return error

@@ -51,18 +51,14 @@ public class AdminController {
 
         List<AuthorModel> authors = authorService.listAllAuthors();
 
-        if (!authors.isEmpty()) {
-            modelAndView.setViewName("author/adminAuthor");
-            modelAndView.addObject("authors", authors);
-            modelAndView.addObject("userName", session.getCurrentUser().getName());
-            modelAndView.addObject("baseUrl", session.getBaseUrl(request));
+        modelAndView.setViewName("author/adminAuthor");
+        modelAndView.addObject("authors", authors);
+        modelAndView.addObject("userName", session.getCurrentUser().getName());
+        modelAndView.addObject("baseUrl", session.getBaseUrl(request));
 
-            LOG.info("Authors successfully retrieved!");
+        LOG.info("Authors successfully retrieved!");
 
-            return modelAndView;
-        }
-        // retorna erro
-        return null;
+        return modelAndView;
     }
 
     @RequestMapping(value = {"/manage/collections"}, method = RequestMethod.GET)
@@ -75,19 +71,15 @@ public class AdminController {
         // Add a list of collection copy to display in second table in the same page
         modelAndView.addObject("collectionCopyList", collectionCopyService.listAllCollectionCopy());
 
-        if (!collections.isEmpty()) {
-            modelAndView.setViewName("collection/collectionListAdmin");
-            modelAndView.addObject("collections", collections);
-            modelAndView.addObject("authors", authorService.listAllAuthors());
-            modelAndView.addObject("userName", session.getCurrentUser().getName());
-            modelAndView.addObject("baseUrl", session.getBaseUrl(request));
+        modelAndView.setViewName("collection/collectionListAdmin");
+        modelAndView.addObject("collections", collections);
+        modelAndView.addObject("authors", authorService.listAllAuthors());
+        modelAndView.addObject("userName", session.getCurrentUser().getName());
+        modelAndView.addObject("baseUrl", session.getBaseUrl(request));
 
-            LOG.info("Collections successfully retrieved!");
+        LOG.info("Collections successfully retrieved!");
 
-            return modelAndView;
-        }
-        // retorna erro
-        return null;
+        return modelAndView;
     }
 
     @RequestMapping(value = {"/manage/loans"}, method = RequestMethod.GET)
@@ -109,17 +101,13 @@ public class AdminController {
 
         List<UserModel> users = userService.listAllUsers();
 
-        if (!users.isEmpty()) {
-            modelAndView.setViewName("user/adminView");
-            modelAndView.addObject("users", users);
-            modelAndView.addObject("userName", session.getCurrentUser().getName());
-            modelAndView.addObject("baseUrl", session.getBaseUrl(request));
+        modelAndView.setViewName("user/adminView");
+        modelAndView.addObject("users", users);
+        modelAndView.addObject("userName", session.getCurrentUser().getName());
+        modelAndView.addObject("baseUrl", session.getBaseUrl(request));
 
-            LOG.info("Users successfully retrieved!");
+        LOG.info("Users successfully retrieved!");
 
-            return modelAndView;
-        }
-        // retorna erro
-        return null;
+        return modelAndView;
     }
 }
