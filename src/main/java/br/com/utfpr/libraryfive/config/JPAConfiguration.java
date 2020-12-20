@@ -45,7 +45,7 @@ public class JPAConfiguration {
 
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
         dataSource.setUrl("jdbc:mysql://localhost:3306/libraryFive?createDatabaseIfNotExist=true");
-        dataSource.setUsername("root");
+        dataSource.setUsername("lucaszarzur");
         dataSource.setPassword("root");
 
         return dataSource;
