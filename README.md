@@ -13,6 +13,8 @@ A atividade foi continuada por conta própria, seguindo como prática para estud
 - Java
 - Spring MVC
 - Hibernate
+- MySQL
 - Spring Security
 - Log4j
+- Thymeleaf
 - Maven
