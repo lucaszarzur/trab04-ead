@@ -4,6 +4,7 @@ import br.com.utfpr.libraryfive.model.UserModel;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @Component
 public class Session {
@@ -20,5 +21,13 @@ public class Session {
 
     public String getBaseUrl(HttpServletRequest request) {
         return request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+    }
+
+    public void createSessionErrorMessage(HttpServletRequest request, String attribute, String errorMessage) {
+        request.getSession().setAttribute(attribute, errorMessage);
+    }
+
+    public void removeSessionAttribute(HttpSession httpSession, String attribute) {
+        httpSession.removeAttribute(attribute);
     }
 }

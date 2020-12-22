@@ -1,5 +1,6 @@
 package br.com.utfpr.libraryfive.controllers;
 
+import br.com.utfpr.libraryfive.enums.ErrorMessagesTypeEnum;
 import br.com.utfpr.libraryfive.model.*;
 import br.com.utfpr.libraryfive.populators.CollectionModifiedPopulator;
 import br.com.utfpr.libraryfive.service.AuthorService;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
@@ -43,7 +45,7 @@ public class CollectionController extends AbstractController {
     AuthorService authorService;
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public ModelAndView showCollection(HttpServletRequest request, ModelAndView modelAndView) {
+    public ModelAndView showCollection(HttpServletRequest request, ModelAndView modelAndView, HttpSession httpSession) {
 
         List<CollectionModel> availableCollection = collectionService.findAllAvailableCollection();
 
@@ -55,6 +57,8 @@ public class CollectionController extends AbstractController {
         modelAndView.addObject("collections", collections);
         modelAndView.addObject("user", session.getCurrentUser());
         modelAndView.addObject("errorInLoan", errorInLoan);
+
+        session.removeSessionAttribute(httpSession, ErrorMessagesTypeEnum.ERROR_MESSAGE_LOAN.toString());
 
         LOG.info("Collections successfully retrieved!");
 

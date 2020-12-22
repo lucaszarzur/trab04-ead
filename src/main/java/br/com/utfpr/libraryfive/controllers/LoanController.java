@@ -1,5 +1,6 @@
 package br.com.utfpr.libraryfive.controllers;
 
+import br.com.utfpr.libraryfive.enums.ErrorMessagesTypeEnum;
 import br.com.utfpr.libraryfive.model.LoanModel;
 import br.com.utfpr.libraryfive.model.ReturnModel;
 import br.com.utfpr.libraryfive.model.UserModel;
@@ -17,14 +18,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.Locale;
-import java.util.Properties;
 import java.util.ResourceBundle;
 
 
@@ -63,7 +61,7 @@ public class LoanController extends AbstractController {
             loanService.makeLoan(collectionId, collectionQty);
         } else {
             // if not OK (make loan), redirect to collections list with an error message
-            request.getSession().setAttribute("errorMessageLoan", propertyValue);
+            session.createSessionErrorMessage(request, ErrorMessagesTypeEnum.ERROR_MESSAGE_LOAN.toString(), propertyValue);
 
             return REDIRECT_TO_COLLECTIONS_LIST;
         }
