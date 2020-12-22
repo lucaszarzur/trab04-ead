@@ -36,88 +36,10 @@
 </head>
 
 <!-- nav admin -->
-<nav th:if="${user.getAdmin() == true}" class="navbar navbar-default navbar-expand-lg navbar-light">
-    <div class="navbar-header d-flex col">
-        <a class="navbar-brand" th:href="@{/home}">Library<b>Five</b></a>
-        <button type="button" data-target="#navbarCollapse" data-toggle="collapse"
-                class="navbar-toggle navbar-toggler ml-auto">
-            <span class="navbar-toggler-icon"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-        </button>
-    </div>
-    <!-- Collection of nav links, forms, and other content for toggling -->
-    <div id="navbarCollapse" class="collapse navbar-collapse justify-content-start">
-        <ul class="nav navbar-nav">
-            <li class="nav-item active"><a th:href="@{/collection/list}" class="nav-link">Catálogo (aluno)</a></li>
-            <li class="nav-item dropdown">
-                <a data-toggle="dropdown" class="nav-link dropdown-toggle" href="#">Administração<b
-                        class="caret"></b></a>
-                <ul class="dropdown-menu">
-                    <li><a th:href="@{/admin/manage/authors}" class="dropdown-item">Administrar autores</a></li>
-                    <li><a th:href="@{/admin/manage/collections}" class="dropdown-item">Administrar catálogo</a></li>
-                    <li><a th:href="@{/admin/manage/loans}" class="dropdown-item">Administrar empréstimos</a></li>
-                    <li><a th:href="@{/admin/manage/users}">Administrar usuários</a></li>
-                </ul>
-            </li>
-
-        </ul>
-        <ul class="nav navbar-nav navbar-right ml-auto">
-            <li class="nav-item dropdown">
-                <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle user-action"><span
-                        th:utext="${user.name}"></span><b class="caret"></b></a>
-                <ul class="dropdown-menu">
-                    <li><a th:href="@{/myAccount}" class="dropdown-item"><i class="fa fa-user-o"></i> Minha
-                        conta</a></li>
-                    <li class="divider dropdown-divider"></li>
-                    <li><a th:href="@{/logout}" class="dropdown-item"><i class="material-icons">&#xE8AC;</i> Logout</a>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-    </div>
-</nav>
+<div th:include="nav/admin :: navAdminFragment"></div>
 
 <!-- nav user -->
-<nav th:if="${user.getAdmin() == false}" class="navbar navbar-default navbar-expand-lg navbar-light">
-    <div class="navbar-header d-flex col">
-        <a class="navbar-brand" th:href="@{/home}">Library<b>Five</b></a>
-        <button type="button" data-target="#navbarCollapse2" data-toggle="collapse"
-                class="navbar-toggle navbar-toggler ml-auto">
-            <span class="navbar-toggler-icon"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-        </button>
-    </div>
-    <!-- Collection of nav links, forms, and other content for toggling -->
-    <div id="navbarCollapse2" class="collapse navbar-collapse justify-content-start">
-        <ul class="nav navbar-nav">
-            <li class="nav-item active"><a th:href="@{/collection/list}" class="nav-link">Catálogo</a></li>
-            <li class="nav-item dropdown">
-                <a data-toggle="dropdown" class="nav-link dropdown-toggle" href="#">Minha conta<b
-                        class="caret"></b></a>
-                <ul class="dropdown-menu">
-                    <li><a th:href="@{/collection/list}" class="dropdown-item">Ver catálogo</a></li>
-                    <li><a th:href="@{/loan/myloans}" class="dropdown-item">Meus empréstimos</a></li>
-                    <li><a th:href="@{/loan/myhistory}">Meu histórico</a></li>
-                </ul>
-            </li>
-
-        </ul>
-        <ul class="nav navbar-nav navbar-right ml-auto">
-            <li class="nav-item dropdown">
-                <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle user-action"><span th:utext="${user.name}"></span><b class="caret"></b></a>
-                <ul class="dropdown-menu">
-                    <li><a th:href="@{/myAccount}" class="dropdown-item"><i class="fa fa-user-o"></i> Minha conta</a></li>
-                    <li class="divider dropdown-divider"></li>
-                    <li><a th:href="@{/logout}" class="dropdown-item"><i class="material-icons">&#xE8AC;</i> Logout</a></li>
-                </ul>
-            </li>
-        </ul>
-    </div>
-</nav>
+<div th:include="nav/user :: navUserFragment"></div>
 
 <hr>
 <div class="container bootstrap snippet">
