@@ -17,8 +17,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
+import java.util.Locale;
+import java.util.Properties;
+import java.util.ResourceBundle;
 
 
 @Controller
@@ -43,16 +50,26 @@ public class LoanController extends AbstractController {
     private ReturnService returnService;
 
     @RequestMapping(value = {"/new"}, method = RequestMethod.POST)
-    public String newLoan(HttpServletRequest request) {
+    public String newLoan(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        // Load properties file from class path
+        ResourceBundle rb = ResourceBundle.getBundle("libraryFive", new Locale("pt"));
+        String propertyValue = rb.getString("errorMessageLoan");
 
         Integer collectionId = formatUtils.getIntegerValue(request.getParameter("collectionId"));
         Integer collectionQty = formatUtils.getIntegerValue(request.getParameter("quantity"));
 
-        if (collectionId != null && collectionService.isAvailable(collectionId, collectionQty))
+        if (collectionId != null && collectionService.isAvailable(collectionId, collectionQty)) {
             loanService.makeLoan(collectionId, collectionQty);
+        } else {
+            // if not OK (make loan), redirect to collections list with an error message
+            request.getSession().setAttribute("errorMessageLoan", propertyValue);
 
+            return REDIRECT_TO_COLLECTIONS_LIST;
+        }
         LOG.info("Loan has been created!");
 
+        // if OK (make loan), redirect to my loans
         return REDIRECT_TO_MY_LOANS;
     }
 

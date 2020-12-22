@@ -1,0 +1,21 @@
+<!-- Error Loan Modal HTML -->
+<div th:fragment="errorLoanModalFragment">
+    <div id="errorLoan" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Erro ao processar sua solicitação de empréstimo</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label><span th:text="${errorInLoan}"></span></label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-info" data-dismiss="modal" value="OK">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

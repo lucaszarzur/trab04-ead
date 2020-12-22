@@ -43,15 +43,18 @@ public class CollectionController extends AbstractController {
     AuthorService authorService;
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public ModelAndView showCollection(ModelAndView modelAndView) {
+    public ModelAndView showCollection(HttpServletRequest request, ModelAndView modelAndView) {
 
         List<CollectionModel> availableCollection = collectionService.findAllAvailableCollection();
 
         List<ModifiedCollection> collections = collectionModifiedPopulator.populate(availableCollection, false);
 
+        String errorInLoan = request.getSession().getAttribute("errorMessageLoan") != null ? request.getSession().getAttribute("errorMessageLoan").toString() : "";
+
         modelAndView.setViewName("collection/collectionList");
         modelAndView.addObject("collections", collections);
         modelAndView.addObject("user", session.getCurrentUser());
+        modelAndView.addObject("errorInLoan", errorInLoan);
 
         LOG.info("Collections successfully retrieved!");
 
