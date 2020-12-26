@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Service
-@Transactional
 public class UserServiceImpl implements UserService {
 
     @Autowired

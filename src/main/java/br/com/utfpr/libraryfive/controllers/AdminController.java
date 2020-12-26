@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
-@Transactional
 @RequestMapping("/admin")
 public class AdminController {
 

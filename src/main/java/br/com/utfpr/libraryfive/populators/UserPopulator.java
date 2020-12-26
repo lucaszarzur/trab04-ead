@@ -5,7 +5,6 @@ import br.com.utfpr.libraryfive.service.UserService;
 import br.com.utfpr.libraryfive.util.DateUtils;
 import br.com.utfpr.libraryfive.util.FormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,7 +28,7 @@ public class UserPopulator {
             user.setId(formatUtils.getIntegerValue(request.getParameter("id")));
             user.setName(request.getParameter("name"));
             user.setEmail(request.getParameter("email"));
-            user.setPassword(new BCryptPasswordEncoder().encode(request.getParameter("password")));
+            user.setPassword(request.getParameter("password"));
             user.setUserType(request.getParameter("userType").equals("ALUNO") ? UserModel.UserType.ALUNO : UserModel.UserType.SERVIDOR);
             user.setStreet(request.getParameter("street"));
             user.setStreetNumber(formatUtils.getIntegerValue(request.getParameter("streetNumber")));

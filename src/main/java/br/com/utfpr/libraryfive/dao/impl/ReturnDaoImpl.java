@@ -14,7 +14,6 @@ import java.util.Arrays;
 import java.util.List;
 
 @Repository("returnDao")
-@Transactional
 public class ReturnDaoImpl implements ReturnDao {
 
     static final Logger LOG = LoggerFactory.getLogger(ReturnDaoImpl.class);

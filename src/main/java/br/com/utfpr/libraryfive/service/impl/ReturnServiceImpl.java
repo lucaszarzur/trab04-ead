@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service("returnService")
-@Transactional
 public class ReturnServiceImpl implements ReturnService {
 
     @Autowired

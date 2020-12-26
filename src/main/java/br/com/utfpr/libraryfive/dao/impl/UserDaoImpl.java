@@ -14,7 +14,6 @@ import java.util.Arrays;
 import java.util.List;
 
 @Repository("userDao")
-@Transactional
 public class UserDaoImpl implements UserDao {
 
     static final Logger LOG = LoggerFactory.getLogger(UserDaoImpl.class);

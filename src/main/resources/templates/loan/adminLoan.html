@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>My history</title>
+    <title>Admin - Loans</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -16,66 +16,31 @@
 
     <!-- My CSS -->
     <link rel="stylesheet" type="text/css" media="all"
-          href="/resources/css/navbar.css" th:href="@{/resources/css/navbar.css}"/>
+          href="/css/navbar.css" th:href="@{/css/navbar.css}"/>
 
     <link rel="stylesheet" type="text/css" media="all"
-          href="/resources/css/loan-history.css" th:href="@{/resources/css/loan-history.css}"/>
+          href="/css/loan.css" th:href="@{/css/loan.css}"/>
 
     <script type="text/javascript">
-        $(document).ready(function () {
-            var _ctx = $("meta[name='_ctx']").attr("content");
-
-            // Prepend context path to all jQuery AJAX requests
-            $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
-                if (!options.crossDomain) {
-                    options.url = _ctx + options.url;
-                }
-            });
-        });
-
-        // Search
-        $(document).ready(function () {
-            // Activate tooltips
+        $(document).ready(function(){
             $('[data-toggle="tooltip"]').tooltip();
-
-            // Filter table rows based on searched term
-            $("#search").on("keyup", function () {
-                var term = $(this).val().toLowerCase();
-                $("table tbody tr").each(function () {
-                    $row = $(this);
-                    var name = $row.find("td:nth-child(2)").text().toLowerCase();
-                    console.log(name);
-                    if (name.search(term) < 0) {
-                        $row.hide();
-                    } else {
-                        $row.show();
-                    }
-                });
-            });
         });
-
     </script>
 </head>
 <body>
 
-<!-- nav user -->
-<div th:include="nav/userNoVerification :: navUserFragment"></div>
+<!-- nav admin -->
+<div th:include="nav/adminNoVerification :: navAdminFragment"></div>
 
 <div class="container">
     <div class="table-wrapper">
         <div class="table-title">
             <div class="row">
-                <div class="col-sm-6">
-                    <h2>Meu <b>Histórico</b></h2>
+                <div class="col-sm-5">
+                    <h2>Meus <b>Empréstimos</b></h2>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-7">
                     <a href="#" class="btn btn-primary"><i class="material-icons">&#xE24D;</i> <span>Exportar para Excel</span></a>
-                    <div class="search-box">
-                        <div class="input-group">
-                            <input type="text" id="search" class="form-control" placeholder="Procurar por nome">
-                            <span class="input-group-addon"><i class="material-icons">&#xE8B6;</i></span>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -84,22 +49,27 @@
             <tr>
                 <th>#</th>
                 <th>Livro</th>
+                <th>Usuário</th>
                 <th>Data do empréstimo</th>
                 <th>Data prevista para devolução</th>
-                <th>Data de devolução</th>
-                <th>Foi entregue</th>
+                <th>Status</th>
+                <th>Ações</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="returnedLoan, custStat : ${returnedLoans}">
+            <tr th:each="loan, custStat : ${loans}">
                 <td><span th:text="${custStat.count}"></span></td>
-                <td><span th:text="${returnedLoan.loan.collectionCopy.collection.getTitle()}"></span></td>
-                <td><span th:text="${returnedLoan.loan.loanDate}"></span></td>
-                <td><span th:text="${returnedLoan.loan.expectedReturnDate}"></span></td>
-                <td><span th:text="${returnedLoan.returnDate}"></span></td>
+                <td><span th:text="${loan.collectionCopy.collection.getTitle()}"></span></td>
+                <td><span th:text="${loan.user.name}"></span></td>
+                <td><span th:text="${loan.loanDate}"></span></td>
+                <td><span th:text="${loan.expectedReturnDate}"></span></td>
                 <td>
-                    <span th:if="${returnedLoan.returnDate} > ${returnedLoan.loan.expectedReturnDate}"><span class="status text-danger">&bull;</span> Atrasado</span>
-                    <span th:if="${returnedLoan.returnDate} < ${returnedLoan.loan.expectedReturnDate}"><span class="status text-success">&bull;</span> Em dia</span>
+                    <span th:if="${loan.expectedReturnDate.before(#dates.createNow())}"><span class="status text-danger">&bull;</span> Atrasado</span>
+                    <span th:if="${loan.expectedReturnDate.after(#dates.createNow())}"><span class="status text-success">&bull;</span> Em dia</span>
+                </td>
+                <td>
+                    <a href="#" class="settings" title="Renovar" data-toggle="tooltip"><i class="material-icons">&#xe863</i></a>
+                    <a href="#" class="delete" title="Devolver" data-toggle="tooltip"><i class="material-icons">&#xE5C9;</i></a>
                 </td>
             </tr>
             </tbody>

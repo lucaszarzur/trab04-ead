@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Service("collectionService")
-@Transactional
 public class CollectionServiceImpl implements CollectionService {
 
     @Autowired

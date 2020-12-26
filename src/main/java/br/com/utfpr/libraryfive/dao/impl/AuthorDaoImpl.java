@@ -15,7 +15,6 @@ import java.util.Arrays;
 import java.util.List;
 
 @Repository("authorDao")
-@Transactional
 public class AuthorDaoImpl implements AuthorDao {
 
     static final Logger LOG = LoggerFactory.getLogger(AuthorDaoImpl.class);

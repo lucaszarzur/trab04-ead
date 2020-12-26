@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin - Loans</title>
+    <title>My loans</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -16,21 +16,42 @@
 
     <!-- My CSS -->
     <link rel="stylesheet" type="text/css" media="all"
-          href="/resources/css/navbar.css" th:href="@{/resources/css/navbar.css}"/>
+          href="/css/navbar.css" th:href="@{/css/navbar.css}"/>
 
     <link rel="stylesheet" type="text/css" media="all"
-          href="/resources/css/loan.css" th:href="@{/resources/css/loan.css}"/>
+          href="/css/loan.css" th:href="@{/css/loan.css}"/>
 
     <script type="text/javascript">
         $(document).ready(function(){
             $('[data-toggle="tooltip"]').tooltip();
         });
+
+        // Return collection copy
+        $(document).ready(function () {
+            $('.table .returnBtn').on('click', function (event) {
+                event.preventDefault();
+                var href = $(this).attr('href');
+                $('#returnLoanModal #returnRef').attr('href', href);
+                $('#returnLoanModal').modal();
+            });
+        });
+
+        // Renew loan
+        $(document).ready(function () {
+            $('.table .renewBtn').on('click', function (event) {
+                event.preventDefault();
+                var href = $(this).attr('href');
+                $('#renewLoanModal #renewRef').attr('href', href);
+                $('#renewLoanModal').modal();
+            });
+        });
+
     </script>
 </head>
 <body>
 
-<!-- nav admin -->
-<div th:include="nav/adminNoVerification :: navAdminFragment"></div>
+<!-- nav user -->
+<div th:include="nav/userNoVerification :: navUserFragment"></div>
 
 <div class="container">
     <div class="table-wrapper">
@@ -40,6 +61,7 @@
                     <h2>Meus <b>Empréstimos</b></h2>
                 </div>
                 <div class="col-sm-7">
+                    <a th:href="@{/collection/list}" class="btn btn-primary"><i class="material-icons">&#xE147;</i> <span>Fazer novo empréstimo</span></a>
                     <a href="#" class="btn btn-primary"><i class="material-icons">&#xE24D;</i> <span>Exportar para Excel</span></a>
                 </div>
             </div>
@@ -49,7 +71,6 @@
             <tr>
                 <th>#</th>
                 <th>Livro</th>
-                <th>Usuário</th>
                 <th>Data do empréstimo</th>
                 <th>Data prevista para devolução</th>
                 <th>Status</th>
@@ -60,7 +81,6 @@
             <tr th:each="loan, custStat : ${loans}">
                 <td><span th:text="${custStat.count}"></span></td>
                 <td><span th:text="${loan.collectionCopy.collection.getTitle()}"></span></td>
-                <td><span th:text="${loan.user.name}"></span></td>
                 <td><span th:text="${loan.loanDate}"></span></td>
                 <td><span th:text="${loan.expectedReturnDate}"></span></td>
                 <td>
@@ -68,8 +88,8 @@
                     <span th:if="${loan.expectedReturnDate.after(#dates.createNow())}"><span class="status text-success">&bull;</span> Em dia</span>
                 </td>
                 <td>
-                    <a href="#" class="settings" title="Renovar" data-toggle="tooltip"><i class="material-icons">&#xe863</i></a>
-                    <a href="#" class="delete" title="Devolver" data-toggle="tooltip"><i class="material-icons">&#xE5C9;</i></a>
+                    <a th:href="@{__${baseUrl}__/loan/renew/(id=${loan.id})}" class="settings renewBtn" title="Renovar" data-toggle="tooltip"><i class="material-icons">&#xe863</i></a>
+                    <a th:href="@{__${baseUrl}__/loan/return/(id=${loan.id})}" class="delete returnBtn" title="Devolver" data-toggle="tooltip"><i class="material-icons">&#xE5C9;</i></a>
                 </td>
             </tr>
             </tbody>
@@ -89,5 +109,46 @@
         </div>
     </div>
 </div>
+
+<!-- Return collection copy Modal HTML -->
+<div id="returnLoanModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Devolver exemplar</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Você tem certeza que quer devolver este exemplar?</p>
+                <p class="text-warning"><small>Esta ação não poderá ser desfeita.</small></p>
+            </div>
+            <div class="modal-footer">
+                <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancelar">
+                <a href="" class="btn btn-danger" id="returnRef">Devolver</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Renew loan Modal HTML -->
+<div id="renewLoanModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Renovar empréstimo</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Você tem certeza que quer renovar?</p>
+                <p class="text-warning"><small>Esta ação não poderá ser desfeita.</small></p>
+            </div>
+            <div class="modal-footer">
+                <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancelar">
+                <a href="" class="btn btn-danger" id="renewRef">Renovar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>

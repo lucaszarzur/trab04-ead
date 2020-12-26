@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@Transactional
 @RequestMapping("/home")
 public class HomeController extends AbstractController {
 

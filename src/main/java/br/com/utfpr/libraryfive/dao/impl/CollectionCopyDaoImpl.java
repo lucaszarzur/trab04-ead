@@ -14,7 +14,6 @@ import java.util.Arrays;
 import java.util.List;
 
 @Repository("collectionCopyDao")
-@Transactional
 public class CollectionCopyDaoImpl implements CollectionCopyDao {
 
     static final Logger LOG = LoggerFactory.getLogger(CollectionCopyDaoImpl.class);

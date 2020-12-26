@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My history</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <!-- My CSS -->
+    <link rel="stylesheet" type="text/css" media="all"
+          href="/css/navbar.css" th:href="@{/css/navbar.css}"/>
+
+    <link rel="stylesheet" type="text/css" media="all"
+          href="/css/loan-history.css" th:href="@{/css/loan-history.css}"/>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var _ctx = $("meta[name='_ctx']").attr("content");
+
+            // Prepend context path to all jQuery AJAX requests
+            $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+                if (!options.crossDomain) {
+                    options.url = _ctx + options.url;
+                }
+            });
+        });
+
+        // Search
+        $(document).ready(function () {
+            // Activate tooltips
+            $('[data-toggle="tooltip"]').tooltip();
+
+            // Filter table rows based on searched term
+            $("#search").on("keyup", function () {
+                var term = $(this).val().toLowerCase();
+                $("table tbody tr").each(function () {
+                    $row = $(this);
+                    var name = $row.find("td:nth-child(2)").text().toLowerCase();
+                    console.log(name);
+                    if (name.search(term) < 0) {
+                        $row.hide();
+                    } else {
+                        $row.show();
+                    }
+                });
+            });
+        });
+
+    </script>
+</head>
+<body>
+
+<!-- nav user -->
+<div th:include="nav/userNoVerification :: navUserFragment"></div>
+
+<div class="container">
+    <div class="table-wrapper">
+        <div class="table-title">
+            <div class="row">
+                <div class="col-sm-6">
+                    <h2>Meu <b>Histórico</b></h2>
+                </div>
+                <div class="col-sm-6">
+                    <a href="#" class="btn btn-primary"><i class="material-icons">&#xE24D;</i> <span>Exportar para Excel</span></a>
+                    <div class="search-box">
+                        <div class="input-group">
+                            <input type="text" id="search" class="form-control" placeholder="Procurar por nome">
+                            <span class="input-group-addon"><i class="material-icons">&#xE8B6;</i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table class="table table-striped table-hover">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Livro</th>
+                <th>Data do empréstimo</th>
+                <th>Data prevista para devolução</th>
+                <th>Data de devolução</th>
+                <th>Foi entregue</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="returnedLoan, custStat : ${returnedLoans}">
+                <td><span th:text="${custStat.count}"></span></td>
+                <td><span th:text="${returnedLoan.loan.collectionCopy.collection.getTitle()}"></span></td>
+                <td><span th:text="${returnedLoan.loan.loanDate}"></span></td>
+                <td><span th:text="${returnedLoan.loan.expectedReturnDate}"></span></td>
+                <td><span th:text="${returnedLoan.returnDate}"></span></td>
+                <td>
+                    <span th:if="${returnedLoan.returnDate} > ${returnedLoan.loan.expectedReturnDate}"><span class="status text-danger">&bull;</span> Atrasado</span>
+                    <span th:if="${returnedLoan.returnDate} < ${returnedLoan.loan.expectedReturnDate}"><span class="status text-success">&bull;</span> Em dia</span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="clearfix">
+            <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
+            <ul class="pagination">
+                <li class="page-item disabled"><a href="#">Previous</a></li>
+                <li class="page-item"><a href="#" class="page-link">1</a></li>
+                <li class="page-item"><a href="#" class="page-link">2</a></li>
+                <li class="page-item active"><a href="#" class="page-link">3</a></li>
+                <li class="page-item"><a href="#" class="page-link">4</a></li>
+                <li class="page-item"><a href="#" class="page-link">5</a></li>
+                <li class="page-item"><a href="#" class="page-link">Next</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>

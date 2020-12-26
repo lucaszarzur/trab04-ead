@@ -3,12 +3,9 @@ package br.com.utfpr.libraryfive.model;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.Type;
-import org.hibernate.validator.constraints.Email;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;

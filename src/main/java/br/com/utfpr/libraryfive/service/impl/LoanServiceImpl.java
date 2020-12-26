@@ -20,7 +20,6 @@ import java.time.ZoneId;
 import java.util.List;
 
 @Service("loanService")
-@Transactional
 public class LoanServiceImpl implements LoanService {
 
     @Autowired

@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
-@Transactional
 @RequestMapping("/user")
 public class UserController extends AbstractController {
 

@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Service("collectionCopyService")
-@Transactional
 public class CollectionCopyServiceImpl implements CollectionCopyService {
 
     @Autowired

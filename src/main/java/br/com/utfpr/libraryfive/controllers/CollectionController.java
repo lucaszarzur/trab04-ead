@@ -23,7 +23,6 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
-@Transactional
 @RequestMapping("/collection")
 public class CollectionController extends AbstractController {
 

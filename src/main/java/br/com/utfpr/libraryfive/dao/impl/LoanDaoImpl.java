@@ -14,7 +14,6 @@ import java.util.Arrays;
 import java.util.List;
 
 @Repository("loanDao")
-@Transactional
 public class LoanDaoImpl implements LoanDao {
 
     static final Logger LOG = LoggerFactory.getLogger(LoanDaoImpl.class);
