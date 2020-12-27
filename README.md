@@ -11,10 +11,13 @@ A atividade foi continuada por conta própria, seguindo como prática para estud
 
 ## Tecnologias utilizadas
 - Java
+- Spring Boot
 - Spring MVC
+- Spring Security
+- Spring Data JPA
 - Hibernate
 - MySQL
-- Spring Security
-- Log4j
+- Apache Log4j
+- JSR303 validation
 - Thymeleaf
 - Maven
