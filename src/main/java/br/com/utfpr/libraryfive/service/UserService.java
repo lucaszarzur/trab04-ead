@@ -1,15 +1,13 @@
 package br.com.utfpr.libraryfive.service;
 
 import br.com.utfpr.libraryfive.model.UserModel;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-public interface UserService {
+public interface UserService extends UserDetailsService {
 
-    void createUser(UserModel user);
-
-    void editUser(UserModel user);
+    UserModel save(UserModel userModel);
 
     void deleteUser(UserModel user);
 
@@ -18,8 +16,4 @@ public interface UserService {
     UserModel findById(Integer id);
 
     UserModel findByEmail(String email);
-
-    UserModel doLogin(String email, String password);
-
-    UserModel getUserByRegisterForm(HttpServletRequest request, Boolean isNewUser);
 }

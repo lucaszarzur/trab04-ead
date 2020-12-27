@@ -1,22 +1,19 @@
 package br.com.utfpr.libraryfive.dao;
 
 import br.com.utfpr.libraryfive.model.UserModel;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface UserDao {
+@Repository("userDao")
+public interface UserDao extends JpaRepository<UserModel, Long> {
 
-    void createUser(UserModel user);
+    void delete(UserModel user);
 
-    void editUser(UserModel user);
-
-    void deleteUser(UserModel user);
-
-    List<UserModel> findAllUsers();
+    List<UserModel> findAll();
 
     UserModel findById(Integer id);
 
     UserModel findByEmail(String email);
-
-    UserModel doLogin(String email, String password);
 }

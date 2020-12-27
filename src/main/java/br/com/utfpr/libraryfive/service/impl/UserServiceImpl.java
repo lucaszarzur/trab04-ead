@@ -1,15 +1,20 @@
 package br.com.utfpr.libraryfive.service.impl;
 
 import br.com.utfpr.libraryfive.dao.UserDao;
+import br.com.utfpr.libraryfive.model.RoleModel;
 import br.com.utfpr.libraryfive.model.UserModel;
-import br.com.utfpr.libraryfive.populators.UserPopulator;
 import br.com.utfpr.libraryfive.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -18,26 +23,22 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     @Autowired
-    private UserPopulator userPopulator;
+    private BCryptPasswordEncoder passwordEncoder;
 
     @Override
-    public void createUser(UserModel user) {
-        userDao.createUser(user);
-    }
+    public UserModel save(UserModel userModel) {
 
-    @Override
-    public void editUser(UserModel user) {
-        userDao.editUser(user);
+        return userDao.save(userModel);
     }
 
     @Override
     public void deleteUser(UserModel user) {
-        userDao.deleteUser(user);
+        userDao.delete(user);
     }
 
     @Override
     public List<UserModel> listAllUsers() {
-        return userDao.findAllUsers();
+        return userDao.findAll();
     }
 
     @Override
@@ -49,12 +50,16 @@ public class UserServiceImpl implements UserService {
         return userDao.findByEmail(email);
     }
 
-    public UserModel doLogin(String email, String password) {
-        return userDao.doLogin(email, password);
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        UserModel userModel = userDao.findByEmail(username);
+        if (userModel == null) {
+            throw new UsernameNotFoundException("Invalid username or password.");
+        }
+        return new org.springframework.security.core.userdetails.User(userModel.getEmail(), userModel.getPassword(), mapRolesToAuthorities(userModel.getRoles()));
     }
 
-    @Override
-    public UserModel getUserByRegisterForm(HttpServletRequest request, Boolean isNewUser) {
-        return userPopulator.populate(request, isNewUser);
+    private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<RoleModel> roles){
+        return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
     }
 }

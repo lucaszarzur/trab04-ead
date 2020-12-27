@@ -7,6 +7,7 @@ import org.hibernate.annotations.Type;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -111,7 +112,38 @@ public class UserModel implements Serializable {
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     private List<ReserveModel> reserve;
 
-    public String addres() {
+    // usuario n:n regra
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "users_roles",
+            joinColumns = @JoinColumn(
+                    name = "user_id", referencedColumnName = "ID_USUARIO"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "role_id", referencedColumnName = "id"))
+    private Collection<RoleModel> roles;
+
+    public UserModel() {
+    }
+
+    public UserModel(String name, String email, UserType userType, String street, String neighborhood, Integer streetNumber,
+                     String additionalAddress, String state, String city, Date birthDate, UserStatus userStatus, String password,
+                     Boolean admin, Collection<RoleModel> roles) {
+        this.name = name;
+        this.email = email;
+        this.userType = userType;
+        this.street = street;
+        this.neighborhood = neighborhood;
+        this.streetNumber = streetNumber;
+        this.additionalAddress = additionalAddress;
+        this.state = state;
+        this.city = city;
+        this.birthDate = birthDate;
+        this.userStatus = userStatus;
+        this.password = password;
+        this.admin = admin;
+        this.roles = roles;
+    }
+
+    public String address() {
         return street.concat(", ").
                 concat(String.valueOf(streetNumber)).
                 concat(" - ").concat(city);
@@ -252,5 +284,13 @@ public class UserModel implements Serializable {
 
     public void setReserve(List<ReserveModel> reserve) {
         this.reserve = reserve;
+    }
+
+    public Collection<RoleModel> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Collection<RoleModel> roles) {
+        this.roles = roles;
     }
 }

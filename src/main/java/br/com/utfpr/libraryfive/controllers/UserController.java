@@ -7,11 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
@@ -26,33 +24,33 @@ public class UserController extends AbstractController {
     @Autowired
     UserService userService;
 
+    @RequestMapping(value = "/new", method = RequestMethod.GET)
+    public String newUserGet() {
+
+        return "/user/adminView";
+    }
+
     @RequestMapping(value = "/new", method = RequestMethod.POST)
-    public String newUser(final HttpServletRequest request) {
+    public String newUser(@ModelAttribute("user") UserModel userModel) {
 
         Boolean isAdmin = session.getCurrentUser().getAdmin();
 
         if (isAdmin) {
-            UserModel user = userService.getUserByRegisterForm(request, true);
+            userService.save(userModel);
 
-            if (user != null) {
-                userService.createUser(user);
-
-                return REDIRECT_TO_ADMIN_VIEW_USERS;
-            }
+            return REDIRECT_TO_ADMIN_VIEW_USERS;
         }
         // retorna erro
         return null;
     }
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
-    public String editUser(final HttpServletRequest request) {
+    public String editUser(@ModelAttribute("user") UserModel userModel) {
 
         Boolean isAdmin = session.getCurrentUser().getAdmin();
 
         if (isAdmin) {
-            UserModel user = userService.getUserByRegisterForm(request, false);
-
-            userService.editUser(user);
+            userService.save(userModel);
 
             return REDIRECT_TO_ADMIN_VIEW_USERS;
         }
