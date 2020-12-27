@@ -3,7 +3,7 @@ package br.com.utfpr.libraryfive.controllers;
 import br.com.utfpr.libraryfive.model.UserModel;
 import br.com.utfpr.libraryfive.service.UserService;
 import br.com.utfpr.libraryfive.util.FormatUtils;
-import br.com.utfpr.libraryfive.util.Session;
+import br.com.utfpr.libraryfive.util.SessionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -20,7 +20,7 @@ import java.util.List;
 public class SuperAdminController {
 
     @Autowired
-    private Session session;
+    private SessionUtils sessionUtils;
 
     @Autowired
     UserService userService;
@@ -36,7 +36,7 @@ public class SuperAdminController {
 
         modelAndView.setViewName("superAdmin/superAdminManageUser");
         modelAndView.addObject("users", users);
-        modelAndView.addObject("baseUrl", session.getBaseUrl(request));
+        modelAndView.addObject("baseUrl", sessionUtils.getBaseUrl(request));
 
         return modelAndView;
     }
@@ -52,7 +52,7 @@ public class SuperAdminController {
 
         modelAndView.setViewName("superAdmin/superAdminManageUser");
         modelAndView.addObject("users", users);
-        modelAndView.addObject("baseUrl", session.getBaseUrl(request));
+        modelAndView.addObject("baseUrl", sessionUtils.getBaseUrl(request));
 
         return modelAndView;
     }
@@ -79,7 +79,7 @@ public class SuperAdminController {
 
         modelAndView.setViewName("superAdmin/superAdminManageUser");
         modelAndView.addObject("users", users);
-        modelAndView.addObject("baseUrl", session.getBaseUrl(request));
+        modelAndView.addObject("baseUrl", sessionUtils.getBaseUrl(request));
 
         return modelAndView;
     }
@@ -95,7 +95,7 @@ public class SuperAdminController {
 
         modelAndView.setViewName("superAdmin/superAdminManageUser");
         modelAndView.addObject("users", users);
-        modelAndView.addObject("baseUrl", session.getBaseUrl(request));
+        modelAndView.addObject("baseUrl", sessionUtils.getBaseUrl(request));
 
         return modelAndView;
     }

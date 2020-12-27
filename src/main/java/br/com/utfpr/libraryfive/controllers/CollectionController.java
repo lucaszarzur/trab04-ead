@@ -7,12 +7,11 @@ import br.com.utfpr.libraryfive.service.AuthorService;
 import br.com.utfpr.libraryfive.service.CollectionCopyService;
 import br.com.utfpr.libraryfive.service.CollectionService;
 import br.com.utfpr.libraryfive.util.ModifiedCollection;
-import br.com.utfpr.libraryfive.util.Session;
+import br.com.utfpr.libraryfive.util.SessionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,7 +37,7 @@ public class CollectionController extends AbstractController {
     private CollectionCopyService collectionCopyService;
 
     @Autowired
-    private Session session;
+    private SessionUtils sessionUtils;
 
     @Autowired
     AuthorService authorService;
@@ -54,10 +53,10 @@ public class CollectionController extends AbstractController {
 
         modelAndView.setViewName("collection/collectionList");
         modelAndView.addObject("collections", collections);
-        modelAndView.addObject("user", session.getCurrentUser());
+        modelAndView.addObject("user", sessionUtils.getCurrentUser());
         modelAndView.addObject("errorInLoan", errorInLoan);
 
-        session.removeSessionAttribute(httpSession, ErrorMessagesTypeEnum.ERROR_MESSAGE_LOAN.toString());
+        sessionUtils.removeSessionAttribute(httpSession, ErrorMessagesTypeEnum.ERROR_MESSAGE_LOAN.toString());
 
         LOG.info("Collections successfully retrieved!");
 
@@ -67,7 +66,7 @@ public class CollectionController extends AbstractController {
     @RequestMapping(value = "/new", method = RequestMethod.POST)
     public String createCollection(final HttpServletRequest request) {
 
-        Boolean isAdmin = session.getCurrentUser().getAdmin();
+        Boolean isAdmin = sessionUtils.getCurrentUser().getAdmin();
 
         if (isAdmin) {
             CollectionModel collection = collectionService.getCollectionByRegisterForm(request, true);
@@ -92,7 +91,7 @@ public class CollectionController extends AbstractController {
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     public String editCollection(final HttpServletRequest request) {
 
-        Boolean isAdmin = session.getCurrentUser().getAdmin();
+        Boolean isAdmin = sessionUtils.getCurrentUser().getAdmin();
 
         if (isAdmin) {
             CollectionModel collection =  collectionService.getCollectionByRegisterForm(request, false);
@@ -110,7 +109,7 @@ public class CollectionController extends AbstractController {
     @RequestMapping(value = "/delete", method = RequestMethod.GET)
     public String deleteCollection(@RequestParam("id") final int id){
 
-        Boolean isAdmin = session.getCurrentUser().getAdmin();
+        Boolean isAdmin = sessionUtils.getCurrentUser().getAdmin();
 
         if (isAdmin) {
             CollectionModel collection =  collectionService.findById(id);
@@ -127,7 +126,7 @@ public class CollectionController extends AbstractController {
     @RequestMapping(value = "/copy/new", method = RequestMethod.POST)
     public String createCollectionCopy(final HttpServletRequest request) {
 
-        Boolean isAdmin = session.getCurrentUser().getAdmin();
+        Boolean isAdmin = sessionUtils.getCurrentUser().getAdmin();
 
         if (isAdmin) {
             CollectionCopyModel collectionCopy = collectionCopyService.getCollectionCopyByRegisterForm(request, true);
@@ -147,7 +146,7 @@ public class CollectionController extends AbstractController {
     @RequestMapping(value = "/copy/edit", method = RequestMethod.POST)
     public String editCollectionCopy(final HttpServletRequest request) {
 
-        Boolean isAdmin = session.getCurrentUser().getAdmin();
+        Boolean isAdmin = sessionUtils.getCurrentUser().getAdmin();
 
         if (isAdmin) {
             CollectionCopyModel collectionCopy = collectionCopyService.getCollectionCopyByRegisterForm(request, false);
@@ -165,7 +164,7 @@ public class CollectionController extends AbstractController {
     @RequestMapping(value = "/copy/delete", method = RequestMethod.GET)
     public String deleteCollectionCopy(@RequestParam("id") final int id){
 
-        Boolean isAdmin = session.getCurrentUser().getAdmin();
+        Boolean isAdmin = sessionUtils.getCurrentUser().getAdmin();
 
         if (isAdmin) {
             CollectionCopyModel collectionCopy = collectionCopyService.findById(id);

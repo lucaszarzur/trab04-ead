@@ -10,10 +10,9 @@ import br.com.utfpr.libraryfive.service.CollectionService;
 import br.com.utfpr.libraryfive.service.LoanService;
 import br.com.utfpr.libraryfive.service.UserService;
 import br.com.utfpr.libraryfive.util.DateUtils;
-import br.com.utfpr.libraryfive.util.Session;
+import br.com.utfpr.libraryfive.util.SessionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -23,7 +22,7 @@ import java.util.List;
 public class LoanServiceImpl implements LoanService {
 
     @Autowired
-    private Session session;
+    private SessionUtils sessionUtils;
 
     @Autowired
     private DateUtils dateUtils;
@@ -47,7 +46,7 @@ public class LoanServiceImpl implements LoanService {
     public void makeLoan(Integer collectionId, Integer quantity) {
 
         // ID_USUARIO
-        UserModel user = userService.findById(session.getCurrentUser().getId());
+        UserModel user = userService.findById(sessionUtils.getCurrentUser().getId());
 
         // ID_EXEMPLAR
         CollectionCopyModel collectionCopy = collectionService.findById(collectionId).getCollectionCopyList().stream().filter(i -> i.getCollectionCopySituation().equals(CollectionCopyModel.CollectionCopySituation.Disponível)).findFirst().get();

@@ -5,10 +5,9 @@ import br.com.utfpr.libraryfive.model.ReturnModel;
 import br.com.utfpr.libraryfive.model.UserModel;
 import br.com.utfpr.libraryfive.service.LoanService;
 import br.com.utfpr.libraryfive.service.ReturnService;
-import br.com.utfpr.libraryfive.util.Session;
+import br.com.utfpr.libraryfive.util.SessionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -21,7 +20,7 @@ import java.util.List;
 public class MyAccountController {
 
     @Autowired
-    private Session session;
+    private SessionUtils sessionUtils;
 
     @Autowired
     private LoanService loanService;
@@ -32,7 +31,7 @@ public class MyAccountController {
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView showMyAccountDetails(ModelAndView modelAndView) {
 
-        UserModel user = session.getCurrentUser();
+        UserModel user = sessionUtils.getCurrentUser();
 
         List<ReturnModel> returnedLoans = returnService.findAllReturnedLoansByEmail(user.getEmail());
         List<LoanModel> activeLoans = loanService.listAllByEmail(user.getEmail());

@@ -28,6 +28,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserModel save(UserModel userModel) {
 
+        userModel.setPassword(passwordEncoder.encode(userModel.getPassword()));
+
         return userDao.save(userModel);
     }
 

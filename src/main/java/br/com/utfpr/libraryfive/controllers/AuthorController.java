@@ -3,12 +3,11 @@ package br.com.utfpr.libraryfive.controllers;
 import br.com.utfpr.libraryfive.model.AuthorModel;
 import br.com.utfpr.libraryfive.populators.AuthorPopulator;
 import br.com.utfpr.libraryfive.service.AuthorService;
-import br.com.utfpr.libraryfive.util.Session;
+import br.com.utfpr.libraryfive.util.SessionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,7 +21,7 @@ public class AuthorController extends AbstractController {
     static final Logger LOG = LoggerFactory.getLogger(AuthorController.class);
 
     @Autowired
-    private Session session;
+    private SessionUtils sessionUtils;
 
     @Autowired
     private AuthorPopulator authorPopulator;
@@ -33,7 +32,7 @@ public class AuthorController extends AbstractController {
     @RequestMapping(value = "/new", method = RequestMethod.POST)
     public String newUser(final HttpServletRequest request) {
 
-        Boolean isAdmin = session.getCurrentUser().getAdmin();
+        Boolean isAdmin = sessionUtils.getCurrentUser().getAdmin();
 
         if (isAdmin) {
             AuthorModel author = authorPopulator.populate(request);
@@ -53,7 +52,7 @@ public class AuthorController extends AbstractController {
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     public String editAuthor(final HttpServletRequest request) {
 
-        Boolean isAdmin = session.getCurrentUser().getAdmin();
+        Boolean isAdmin = sessionUtils.getCurrentUser().getAdmin();
 
         if (isAdmin) {
             AuthorModel author = authorService.findById(Integer.valueOf(request.getParameter("authorToEditId")));
@@ -72,7 +71,7 @@ public class AuthorController extends AbstractController {
     @RequestMapping(value = "/delete", method = RequestMethod.GET)
     public String deleteAuthor(@RequestParam("id") final int id) {
 
-        Boolean isAdmin = session.getCurrentUser().getAdmin();
+        Boolean isAdmin = sessionUtils.getCurrentUser().getAdmin();
 
         if (isAdmin) {
             AuthorModel author = authorService.findById(id);

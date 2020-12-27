@@ -2,7 +2,7 @@ package br.com.utfpr.libraryfive.controllers;
 
 import br.com.utfpr.libraryfive.service.UserService;
 import br.com.utfpr.libraryfive.model.UserModel;
-import br.com.utfpr.libraryfive.util.Session;
+import br.com.utfpr.libraryfive.util.SessionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ public class UserController extends AbstractController {
     static final Logger LOG = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
-    Session session;
+    SessionUtils sessionUtils;
 
     @Autowired
     UserService userService;
@@ -33,7 +33,7 @@ public class UserController extends AbstractController {
     @RequestMapping(value = "/new", method = RequestMethod.POST)
     public String newUser(@ModelAttribute("user") UserModel userModel) {
 
-        Boolean isAdmin = session.getCurrentUser().getAdmin();
+        Boolean isAdmin = sessionUtils.getCurrentUser().getAdmin();
 
         if (isAdmin) {
             userService.save(userModel);
@@ -47,7 +47,7 @@ public class UserController extends AbstractController {
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     public String editUser(@ModelAttribute("user") UserModel userModel) {
 
-        Boolean isAdmin = session.getCurrentUser().getAdmin();
+        Boolean isAdmin = sessionUtils.getCurrentUser().getAdmin();
 
         if (isAdmin) {
             userService.save(userModel);
@@ -61,7 +61,7 @@ public class UserController extends AbstractController {
     @RequestMapping(value = "/delete", method = RequestMethod.GET)
     public String deleteUser(@RequestParam("id") final int id) {
 
-        Boolean isAdmin = session.getCurrentUser().getAdmin();
+        Boolean isAdmin = sessionUtils.getCurrentUser().getAdmin();
 
         if (isAdmin) {
             UserModel user = userService.findById(id);

@@ -4,12 +4,11 @@ import br.com.utfpr.libraryfive.model.*;
 import br.com.utfpr.libraryfive.populators.CollectionModifiedPopulator;
 import br.com.utfpr.libraryfive.service.*;
 import br.com.utfpr.libraryfive.util.ModifiedCollection;
-import br.com.utfpr.libraryfive.util.Session;
+import br.com.utfpr.libraryfive.util.SessionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -24,7 +23,7 @@ public class AdminController {
     static final Logger LOG = LoggerFactory.getLogger(AdminController.class);
 
     @Autowired
-    private Session session;
+    private SessionUtils sessionUtils;
 
     @Autowired
     AuthorService authorService;
@@ -52,8 +51,8 @@ public class AdminController {
 
         modelAndView.setViewName("author/adminAuthor");
         modelAndView.addObject("authors", authors);
-        modelAndView.addObject("userName", session.getCurrentUser().getName());
-        modelAndView.addObject("baseUrl", session.getBaseUrl(request));
+        modelAndView.addObject("userName", sessionUtils.getCurrentUser().getName());
+        modelAndView.addObject("baseUrl", sessionUtils.getBaseUrl(request));
 
         LOG.info("Authors successfully retrieved!");
 
@@ -73,8 +72,8 @@ public class AdminController {
         modelAndView.setViewName("collection/collectionListAdmin");
         modelAndView.addObject("collections", collections);
         modelAndView.addObject("authors", authorService.listAllAuthors());
-        modelAndView.addObject("userName", session.getCurrentUser().getName());
-        modelAndView.addObject("baseUrl", session.getBaseUrl(request));
+        modelAndView.addObject("userName", sessionUtils.getCurrentUser().getName());
+        modelAndView.addObject("baseUrl", sessionUtils.getBaseUrl(request));
 
         LOG.info("Collections successfully retrieved!");
 
@@ -88,7 +87,7 @@ public class AdminController {
 
         modelAndView.setViewName("loan/adminLoan");
         modelAndView.addObject("loans", allLoans);
-        modelAndView.addObject("userName", session.getCurrentUser().getName());
+        modelAndView.addObject("userName", sessionUtils.getCurrentUser().getName());
 
         LOG.info("Loans successfully retrieved!");
 
@@ -102,8 +101,8 @@ public class AdminController {
 
         modelAndView.setViewName("user/adminView");
         modelAndView.addObject("users", users);
-        modelAndView.addObject("userName", session.getCurrentUser().getName());
-        modelAndView.addObject("baseUrl", session.getBaseUrl(request));
+        modelAndView.addObject("userName", sessionUtils.getCurrentUser().getName());
+        modelAndView.addObject("baseUrl", sessionUtils.getBaseUrl(request));
 
         LOG.info("Users successfully retrieved!");
 

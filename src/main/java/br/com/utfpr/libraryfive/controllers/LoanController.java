@@ -8,7 +8,7 @@ import br.com.utfpr.libraryfive.service.CollectionService;
 import br.com.utfpr.libraryfive.service.LoanService;
 import br.com.utfpr.libraryfive.service.ReturnService;
 import br.com.utfpr.libraryfive.util.FormatUtils;
-import br.com.utfpr.libraryfive.util.Session;
+import br.com.utfpr.libraryfive.util.SessionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ public class LoanController extends AbstractController {
     static final Logger LOG = LoggerFactory.getLogger(LoanController.class);
 
     @Autowired
-    private Session session;
+    private SessionUtils sessionUtils;
 
     @Autowired
     private FormatUtils formatUtils;
@@ -61,7 +61,7 @@ public class LoanController extends AbstractController {
             loanService.makeLoan(collectionId, collectionQty);
         } else {
             // if not OK (make loan), redirect to collections list with an error message
-            session.createSessionErrorMessage(request, ErrorMessagesTypeEnum.ERROR_MESSAGE_LOAN.toString(), propertyValue);
+            sessionUtils.createSessionErrorMessage(request, ErrorMessagesTypeEnum.ERROR_MESSAGE_LOAN.toString(), propertyValue);
 
             return REDIRECT_TO_COLLECTIONS_LIST;
         }
@@ -74,12 +74,12 @@ public class LoanController extends AbstractController {
     @RequestMapping(value = "/myloans", method = RequestMethod.GET)
     public ModelAndView showMyLoans(HttpServletRequest request, ModelAndView modelAndView) {
 
-        List<LoanModel> loans = loanService.listAllByEmail(session.getCurrentUser().getEmail());
+        List<LoanModel> loans = loanService.listAllByEmail(sessionUtils.getCurrentUser().getEmail());
 
         modelAndView.setViewName("loan/userLoan");
         modelAndView.addObject("loans", loans);
-        modelAndView.addObject("userName", session.getCurrentUser().getName());
-        modelAndView.addObject("baseUrl", session.getBaseUrl(request));
+        modelAndView.addObject("userName", sessionUtils.getCurrentUser().getName());
+        modelAndView.addObject("baseUrl", sessionUtils.getBaseUrl(request));
 
         LOG.info("My loans successfully retrieved!");
 
@@ -100,7 +100,7 @@ public class LoanController extends AbstractController {
     @RequestMapping(value = "/myhistory", method = RequestMethod.GET)
     public ModelAndView myHistoryLoans(ModelAndView modelAndView) {
 
-        UserModel currentUser = session.getCurrentUser();
+        UserModel currentUser = sessionUtils.getCurrentUser();
 
         List<ReturnModel> returnedLoans = returnService.findAllReturnedLoansByEmail(currentUser.getEmail());
 
