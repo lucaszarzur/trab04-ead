@@ -4,21 +4,22 @@ import br.com.utfpr.libraryfive.dao.ReturnDao;
 import br.com.utfpr.libraryfive.model.ReturnModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
 import java.util.Arrays;
 import java.util.List;
 
 @Repository("returnDao")
+@Transactional
 public class ReturnDaoImpl implements ReturnDao {
 
     static final Logger LOG = LoggerFactory.getLogger(ReturnDaoImpl.class);
 
-    @PersistenceContext
+    @Autowired
     private EntityManager entityManager;
 
     @Override

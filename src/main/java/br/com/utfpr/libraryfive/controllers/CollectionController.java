@@ -1,6 +1,7 @@
 package br.com.utfpr.libraryfive.controllers;
 
 import br.com.utfpr.libraryfive.enums.ErrorMessagesTypeEnum;
+import br.com.utfpr.libraryfive.exceptions.CollectionAlreadyExists;
 import br.com.utfpr.libraryfive.model.*;
 import br.com.utfpr.libraryfive.populators.CollectionModifiedPopulator;
 import br.com.utfpr.libraryfive.service.AuthorService;
@@ -12,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -49,14 +51,16 @@ public class CollectionController extends AbstractController {
 
         List<ModifiedCollection> collections = collectionModifiedPopulator.populate(availableCollection, false);
 
-        String errorInLoan = request.getSession().getAttribute("errorMessageLoan") != null ? request.getSession().getAttribute("errorMessageLoan").toString() : "";
+        if (sessionUtils.hasErrorSessionByAttribute(request, ErrorMessagesTypeEnum.ERROR_MESSAGE_LOAN_CREATE.toString())) {
+            String errorInLoanCreate = sessionUtils.getErrorSession(request, ErrorMessagesTypeEnum.ERROR_MESSAGE_LOAN_CREATE.toString());
+            modelAndView.addObject("errorInLoanCreate", errorInLoanCreate);
+
+            sessionUtils.removeSessionAttribute(httpSession, ErrorMessagesTypeEnum.ERROR_MESSAGE_LOAN_CREATE.toString());
+        }
 
         modelAndView.setViewName("collection/collectionList");
         modelAndView.addObject("collections", collections);
         modelAndView.addObject("user", sessionUtils.getCurrentUser());
-        modelAndView.addObject("errorInLoan", errorInLoan);
-
-        sessionUtils.removeSessionAttribute(httpSession, ErrorMessagesTypeEnum.ERROR_MESSAGE_LOAN.toString());
 
         LOG.info("Collections successfully retrieved!");
 
@@ -64,39 +68,36 @@ public class CollectionController extends AbstractController {
     }
 
     @RequestMapping(value = "/new", method = RequestMethod.POST)
-    public String createCollection(final HttpServletRequest request) {
+    public String createCollection(@ModelAttribute("collection") CollectionModel collectionModel, final HttpServletRequest request) {
 
         Boolean isAdmin = sessionUtils.getCurrentUser().getAdmin();
 
-        if (isAdmin) {
-            CollectionModel collection = collectionService.getCollectionByRegisterForm(request, true);
-
-            if (collection != null) {
-                collectionService.createCollection(collection);
-                LOG.info("Collection has been created!");
+        try {
+            if (isAdmin) {
+                collectionService.createCollection(request, collectionModel);
 
                 // create in DB and connect collection with author (AuthorCollection)
-                authorService.createAuthorCollection(collection);
-                LOG.info("Collection " + collection.getTitle() + " was related with Author " +
-                        collection.getAuthorCollectionList().iterator().next().getAuthor().getName() +
-                        " and successfully created!");
-
-                return REDIRECT_TO_ADMIN_VIEW_COLLECTIONS;
+                authorService.createAuthorCollection(collectionModel);
             }
+        } catch (CollectionAlreadyExists e) {
+
+            LOG.error("Error in create collection, because: " + e.getMessage());
+
+        } catch (Exception e) {
+
+            LOG.error("Error in create collection: " + e.getMessage());
         }
-        // retorna erro
-        return null;
+
+        return REDIRECT_TO_ADMIN_VIEW_COLLECTIONS;
     }
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
-    public String editCollection(final HttpServletRequest request) {
+    public String editCollection(@ModelAttribute("collection") CollectionModel collectionModel, final HttpServletRequest request) {
 
         Boolean isAdmin = sessionUtils.getCurrentUser().getAdmin();
 
         if (isAdmin) {
-            CollectionModel collection =  collectionService.getCollectionByRegisterForm(request, false);
-
-            collectionService.editCollection(collection);
+            collectionService.editCollection(collectionModel, request);
 
             LOG.info("Collection has been edited!");
 
@@ -124,34 +125,28 @@ public class CollectionController extends AbstractController {
     }
 
     @RequestMapping(value = "/copy/new", method = RequestMethod.POST)
-    public String createCollectionCopy(final HttpServletRequest request) {
+    public String createCollectionCopy(@ModelAttribute("collectionCopy") CollectionCopyModel collectionCopyModel) {
 
         Boolean isAdmin = sessionUtils.getCurrentUser().getAdmin();
 
         if (isAdmin) {
-            CollectionCopyModel collectionCopy = collectionCopyService.getCollectionCopyByRegisterForm(request, true);
+            collectionCopyService.createCollectionCopy(collectionCopyModel);
 
-            if (collectionCopy != null) {
-                collectionCopyService.createCollectionCopy(collectionCopy);
+            LOG.info("Collection copy has been created!");
 
-                LOG.info("Collection copy has been created!");
-
-                return REDIRECT_TO_ADMIN_VIEW_COLLECTIONS;
-            }
+            return REDIRECT_TO_ADMIN_VIEW_COLLECTIONS;
         }
         // retorna erro
         return null;
     }
 
     @RequestMapping(value = "/copy/edit", method = RequestMethod.POST)
-    public String editCollectionCopy(final HttpServletRequest request) {
+    public String editCollectionCopy(@ModelAttribute("collectionCopy") CollectionCopyModel collectionCopyModel, final HttpServletRequest request) {
 
         Boolean isAdmin = sessionUtils.getCurrentUser().getAdmin();
 
         if (isAdmin) {
-            CollectionCopyModel collectionCopy = collectionCopyService.getCollectionCopyByRegisterForm(request, false);
-
-            collectionCopyService.editCollectionCopy(collectionCopy);
+            collectionCopyService.editCollectionCopy(collectionCopyModel);
 
             LOG.info("Collection copy has been edited!");
 

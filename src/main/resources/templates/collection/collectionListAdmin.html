@@ -55,6 +55,15 @@
             });
         });
 
+        $(document).ready(function () {
+            // If error in collection create
+            var error = "[[${errorInCollectionCreate}]]";
+            if (error != null && error !== "") {
+                $('#errorCollectionCreate').modal('show');
+            }
+            console.log(error);
+        });
+
         // Edit collection
         $(document).ready(function () {
             $('.collectionToEditId').on('click', function (event) {
@@ -213,7 +222,7 @@
                     </a>
 
                     <!-- delete collection -->
-                    <a th:href="@{__${baseUrl}__/collection/delete/(id=${collection.id})}" class="delete delBtn"
+                    <a th:href="@{/collection/delete/(id=${collection.id})}" class="delete delBtn"
                        data-toggle="modal">
                         <i class="material-icons" data-toggle="tooltip" title="Deletar">&#xE872;</i>
                     </a>
@@ -295,7 +304,7 @@
                     </a>
 
                     <!-- delete collection copy-->
-                    <a th:href="@{__${baseUrl}__/collection/copy/delete/(id=${collectionCopy.id})}"
+                    <a th:href="@{/collection/copy/delete/(id=${collectionCopy.id})}"
                        class="delete delCcBtn"
                        data-toggle="modal">
                         <i class="material-icons" data-toggle="tooltip" title="Deletar">&#xE872;</i>
@@ -324,7 +333,7 @@
 <div id="addCollectionModal" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form method="POST" th:action="@{/collection/new}">
+            <form method="POST" th:action="@{/collection/new}" th:object="${collection}">
                 <div class="modal-header">
                     <h4 class="modal-title">Adicionar obra</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -332,7 +341,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Titulo</label>
-                        <input type="text" class="form-control" name="title" required>
+                        <input type="text" class="form-control" name="title" th:field="*{title}" required>
                     </div>
 
                     <div class="md-form mb-5">
@@ -349,19 +358,16 @@
 
                     <div class="form-group">
                         <label>Ano de publicação</label>
-                        <input type="text" class="form-control" name="publicationYear" required>
+                        <input type="text" class="form-control" name="publicationYear" th:field="*{publicationYear}" required>
                     </div>
 
-                    <div class="form-group">
+                    <div class="md-form mb-5">
                         <label>Tipo de obra</label>
                         <br class="input-group mb-2 mr-sm-2 mb-sm-0">
                         <div class="form-check">
-                            <select name="collectionType" required>
-                                <option class="form-select-button" name="Literatura" value="Literatura" selected>
-                                    Literatura
+                            <select name="author" th:field="*{collectionType}" required>
+                                <option th:each="collectionType : ${collectionTypes}" th:value="${collectionType}" th:text="${collectionType}" class="form-select-button" value="" name="collectionType" selected>
                                 </option>
-                                <option name="Tese/Monografia" value="Tese/Monografia">Tese/Monografia</option>
-                                <option name="Outros" value="Outros">Outros</option>
                             </select>
                         </div>
                     </div>
@@ -381,7 +387,7 @@
 <div id="editCollectionModal" class="modal fade">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <form method="POST" th:action="@{/collection/edit}">
+            <form method="POST" th:action="@{/collection/edit}" th:object="${collection}">
                 <div class="modal-header text-center">
                     <h4 class="modal-title w-100 font-weight-bold text-secondary ml-5">Editar obra</h4>
                     <button type="button" class="close text-secondary" data-dismiss="modal" aria-label="Close">
@@ -391,7 +397,7 @@
                 <div class="modal-body mx-3">
                     <div class="md-form mb-5">
                         <label data-error="wrong" data-success="right" for="title">Titulo</label>
-                        <input type="text" id="title" name="title" class="form-control validate" required>
+                        <input type="text" id="title" name="title" class="form-control validate" th:field="*{title}" required>
                     </div>
 
                     <div class="md-form mb-5">
@@ -401,14 +407,12 @@
 
                     <div class="md-form mb-5">
                         <label data-error="wrong" data-success="right" for="publicationYear">Ano de publicação</label>
-                        <input type="text" id="publicationYear" name="publicationYear" class="form-control validate"
-                               required>
+                        <input type="text" id="publicationYear" name="publicationYear" class="form-control validate" th:field="*{publicationYear}" required>
                     </div>
 
                     <div class="md-form mb-5">
                         <label data-error="wrong" data-success="right" for="collectionType">Tipo de obra</label>
-                        <input type="text" id="collectionType" name="collectionType" class="form-control validate"
-                               required>
+                        <input type="text" id="collectionType" name="collectionType" class="form-control validate" th:field="*{collectionType}" required>
                     </div>
                 </div>
 
@@ -451,7 +455,7 @@
 <div id="addCollectionCopyModal" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form method="POST" th:action="@{/collection/copy/new}">
+            <form method="POST" th:action="@{/collection/copy/new}" th:object="${collectionCopy}">
                 <div class="modal-header">
                     <h4 class="modal-title">Adicionar exemplar</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -459,14 +463,14 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Data de aquisição</label>
-                        <input type="text" class="form-control" name="acquisitionDate" required>
+                        <input type="text" class="form-control" name="acquisitionDate" th:field="*{acquisitionDate}" required>
                     </div>
 
                     <div class="form-group">
                         <label>Situação</label>
                         <br class="input-group mb-2 mr-sm-2 mb-sm-0">
                         <div class="form-check">
-                            <select name="collectionCopySituation" required>
+                            <select name="collectionCopySituation" th:field="*{collectionCopySituation}" required>
                                 <option class="form-select-button" name="Disponível" value="Disponível" selected>
                                     Disponível
                                 </option>
@@ -494,7 +498,7 @@
 <div id="editCollectionCopyModal" class="modal fade">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <form method="POST" th:action="@{/collection/copy/edit}">
+            <form method="POST" th:action="@{/collection/copy/edit}" th:object="${collectionCopy}">
                 <div class="modal-header text-center">
                     <h4 class="modal-title w-100 font-weight-bold text-secondary ml-5">Editar exemplar</h4>
                     <button type="button" class="close text-secondary" data-dismiss="modal" aria-label="Close">
@@ -505,12 +509,12 @@
 
                     <div class="md-form mb-5">
                         <label data-error="wrong" data-success="right" for="acquisitionDate">Data de aquisição</label>
-                        <input type="text" id="acquisitionDate" name="acquisitionDate" class="form-control validate" required>
+                        <input type="text" id="acquisitionDate" name="acquisitionDate" class="form-control validate" th:field="*{acquisitionDate}" required>
                     </div>
 
                     <div class="md-form mb-5">
                         <label data-error="wrong" data-success="right" for="collectionCopySituation">Situação</label>
-                        <input type="text" id="collectionCopySituation" name="collectionCopySituation" class="form-control validate" required>
+                        <input type="text" id="collectionCopySituation" name="collectionCopySituation" class="form-control validate" th:field="*{collectionCopySituation}" required>
                     </div>
                 </div>
 
@@ -519,7 +523,6 @@
                     <input type="submit" class="btn btn-success" value="Salvar">
 
                     <input id="collectionCopyToEditId" name="collectionCopyToEditId" type="hidden" value=""/>
-<!--                    <div id="resultCc"></div>-->
                 </div>
             </form>
         </div>
@@ -545,6 +548,9 @@
         </div>
     </div>
 </div>
+
+<!-- Error Collection Modal HTML -->
+<div th:include="errors/errorsModals/errorInCollectionCreateModal :: errorCollectionCreateModalFragment"></div>
 
 </body>
 </html>

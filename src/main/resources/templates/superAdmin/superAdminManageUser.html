@@ -15,15 +15,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-    <!--
-        &lt;!&ndash; Bootstrap Local&ndash;&gt;
-        <link rel="stylesheet" href="/resources/bootstrap/css/bootstrap.min.css"
-              th:href="@{/resources/bootstrap/css/bootstrap.min.css}">
-        <script src="/resources/jquery/jquery.min.js" th:src="@{/resources/jquery/jquery.min.js}"></script>
-        <script src="/resources/bootstrap/js/bootstrap.min.js" th:src="@{/resources/bootstrap/js/bootstrap.min.js}"></script>
-    -->
-
-
     <!-- My CSS -->
     <link rel="stylesheet" type="text/css" media="all"
           href="/css/navbar.css" th:href="@{/css/navbar.css}"/>
@@ -154,7 +145,7 @@
                         </i>
                     </a>
 
-                    <a th:href="@{__${baseUrl}__/superAdmin/delete/(id=${user.id})}" class="delete delBtn"
+                    <a th:href="@{/superAdmin/delete/(id=${user.id})}" class="delete delBtn"
                        data-toggle="modal"><i
                             class="material-icons"
                             data-toggle="tooltip" title="Delete">&#xE872;</i></a>

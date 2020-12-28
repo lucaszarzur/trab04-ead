@@ -31,12 +31,8 @@ public class CollectionModel implements Serializable {
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "TIPO_OBRA", columnDefinition="ENUM('Literatura','Tese/Monografia','Outros')")
+    @Column(name = "TIPO_OBRA", columnDefinition="ENUM('Literatura','Tese','Outros')")
     private CollectionType collectionType;
-
-/*    public enum CollectionType {
-        Literatura, Tese{public String toString(){return "Tese/Monografia";}}, Outros
-    }*/
 
     public enum CollectionType {
         Literatura  {
@@ -46,10 +42,10 @@ public class CollectionModel implements Serializable {
             }
         },
 
-        TeseMonografia {
+        Tese {
             @Override
             public String toString() {
-                return "Tese/Monografia";
+                return "Tese";
             }
         },
 

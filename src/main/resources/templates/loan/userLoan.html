@@ -88,8 +88,8 @@
                     <span th:if="${loan.expectedReturnDate.after(#dates.createNow())}"><span class="status text-success">&bull;</span> Em dia</span>
                 </td>
                 <td>
-                    <a th:href="@{__${baseUrl}__/loan/renew/(id=${loan.id})}" class="settings renewBtn" title="Renovar" data-toggle="tooltip"><i class="material-icons">&#xe863</i></a>
-                    <a th:href="@{__${baseUrl}__/loan/return/(id=${loan.id})}" class="delete returnBtn" title="Devolver" data-toggle="tooltip"><i class="material-icons">&#xE5C9;</i></a>
+                    <a th:href="@{/loan/renew/(id=${loan.id})}" class="settings renewBtn" title="Renovar" data-toggle="tooltip"><i class="material-icons">&#xe863</i></a>
+                    <a th:href="@{/loan/return/(id=${loan.id})}" class="delete returnBtn" title="Devolver" data-toggle="tooltip"><i class="material-icons">&#xE5C9;</i></a>
                 </td>
             </tr>
             </tbody>

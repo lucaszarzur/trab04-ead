@@ -1,5 +1,6 @@
 package br.com.utfpr.libraryfive.service;
 
+import br.com.utfpr.libraryfive.exceptions.CollectionAlreadyExists;
 import br.com.utfpr.libraryfive.model.CollectionModel;
 
 import javax.servlet.http.HttpServletRequest;
@@ -7,9 +8,9 @@ import java.util.List;
 
 public interface CollectionService {
 
-    void createCollection(CollectionModel collection);
+    void createCollection(HttpServletRequest request, CollectionModel collectionModel) throws CollectionAlreadyExists;
 
-    void editCollection(CollectionModel collection);
+    void editCollection(CollectionModel collectionModel, HttpServletRequest request);
 
     void deleteCollection(CollectionModel collection);
 
@@ -23,5 +24,5 @@ public interface CollectionService {
 
     boolean isAvailable(Integer collectionId, Integer quantity);
 
-    CollectionModel getCollectionByRegisterForm(HttpServletRequest request, Boolean isNewCollection);
+    List<CollectionModel.CollectionType> listAllCollectionTypes();
 }

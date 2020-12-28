@@ -36,7 +36,6 @@ public class SuperAdminController {
 
         modelAndView.setViewName("superAdmin/superAdminManageUser");
         modelAndView.addObject("users", users);
-        modelAndView.addObject("baseUrl", sessionUtils.getBaseUrl(request));
 
         return modelAndView;
     }
@@ -52,7 +51,6 @@ public class SuperAdminController {
 
         modelAndView.setViewName("superAdmin/superAdminManageUser");
         modelAndView.addObject("users", users);
-        modelAndView.addObject("baseUrl", sessionUtils.getBaseUrl(request));
 
         return modelAndView;
     }
@@ -79,7 +77,6 @@ public class SuperAdminController {
 
         modelAndView.setViewName("superAdmin/superAdminManageUser");
         modelAndView.addObject("users", users);
-        modelAndView.addObject("baseUrl", sessionUtils.getBaseUrl(request));
 
         return modelAndView;
     }
@@ -95,7 +92,6 @@ public class SuperAdminController {
 
         modelAndView.setViewName("superAdmin/superAdminManageUser");
         modelAndView.addObject("users", users);
-        modelAndView.addObject("baseUrl", sessionUtils.getBaseUrl(request));
 
         return modelAndView;
     }

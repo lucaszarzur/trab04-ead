@@ -5,21 +5,22 @@ import br.com.utfpr.libraryfive.model.AuthorCollectionModel;
 import br.com.utfpr.libraryfive.model.AuthorModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
 import java.util.Arrays;
 import java.util.List;
 
 @Repository("authorDao")
+@Transactional
 public class AuthorDaoImpl implements AuthorDao {
 
     static final Logger LOG = LoggerFactory.getLogger(AuthorDaoImpl.class);
 
-    @PersistenceContext
+    @Autowired
     private EntityManager entityManager;
 
     @Override

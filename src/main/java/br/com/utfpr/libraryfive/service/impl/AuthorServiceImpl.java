@@ -6,6 +6,8 @@ import br.com.utfpr.libraryfive.model.AuthorModel;
 import br.com.utfpr.libraryfive.model.CollectionModel;
 import br.com.utfpr.libraryfive.populators.AuthorCollectionPopulator;
 import br.com.utfpr.libraryfive.service.AuthorService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +16,8 @@ import java.util.List;
 
 @Service("authorService")
 public class AuthorServiceImpl implements AuthorService {
+
+    static final Logger LOG = LoggerFactory.getLogger(AuthorServiceImpl.class);
 
     @Autowired
     private AuthorDao authorDao;
@@ -61,5 +65,9 @@ public class AuthorServiceImpl implements AuthorService {
         AuthorCollectionModel authorCollection = authorCollectionPopulator.populate(collection);
 
         authorDao.createAuthorCollection(authorCollection);
+
+        LOG.info("Collection " + collection.getTitle() + " was related with Author " +
+                collection.getAuthorCollectionList().iterator().next().getAuthor().getName() +
+                " and successfully created!");
     }
 }

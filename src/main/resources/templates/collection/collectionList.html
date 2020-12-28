@@ -28,8 +28,8 @@
             $('[data-toggle="tooltip"]').tooltip();
 
             // If error in loan
-            var error = "[[${errorInLoan}]]";
-            if(error !== ""){
+            var error = "[[${errorInLoanCreate}]]";
+            if(error != null && error !== ""){
                 $('#errorLoan').modal('show');
             }
             console.log(error);
@@ -152,5 +152,6 @@
 
 <!-- Error Loan Modal HTML -->
 <div th:include="errors/errorsModals/errorInLoanModal :: errorLoanModalFragment"></div>
+
 </body>
 </html>
